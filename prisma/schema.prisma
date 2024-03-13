@@ -14,7 +14,57 @@ datasource db {
 }
 
 model Armes {
-  id    Int     @id @default(autoincrement())
+  id    Int    @id @default(autoincrement())
   name  String
   image String
+}
+
+model Raffle {
+  id         Int          @id @default(autoincrement())
+  name       String
+  image      String
+  price      Float
+  tickets    Ticket[]
+  properties Properties[]
+  category   Categoty     @relation(fields: [categotyId], references: [id])
+  categotyId Int
+  status     Status       @default(AVAILABLE)
+}
+
+model Ticket {
+  id       Int     @id @default(autoincrement())
+  name     String  @unique
+  winner   Boolean
+  status   Status  @default(AVAILABLE)
+  Raffle   Raffle? @relation(fields: [raffleId], references: [id])
+  raffleId Int?
+  user     User    @relation(fields: [userId], references: [id])
+  userId   Int
+}
+
+enum Status {
+  AVAILABLE
+  UNAVILABLE
+}
+
+model Properties {
+  id       Int     @id @default(autoincrement())
+  name     String
+  value    String
+  raffleId Int?
+  Raffle   Raffle? @relation(fields: [raffleId], references: [id])
+}
+
+model Categoty {
+  id     Int      @id @default(autoincrement())
+  name   String
+  Raffle Raffle[]
+}
+
+model User {
+  id     Int      @id @default(autoincrement())
+  name   String
+  email  String   @unique
+  cpf    String
+  Ticket Ticket[]
 }
