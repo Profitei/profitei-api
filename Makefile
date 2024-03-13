@@ -14,7 +14,7 @@ start: ## Starts docker-compose and the application
 	@npm run start
 
 stop: ## Stops docker-compose
-	@echo "Stopping Localstack"
+	@echo "Stopping PostgresSQL"
 	@docker compose down
 
 install: ## Installs dependencies
