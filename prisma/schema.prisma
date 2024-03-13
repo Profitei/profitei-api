@@ -9,18 +9,13 @@ generator client {
 }
 
 generator erd {
-  provider = "prisma-erd-generator"
+  provider                  = "prisma-erd-generator"
+  includeRelationFromFields = true
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-}
-
-model Armes {
-  id    Int    @id @default(autoincrement())
-  name  String
-  image String
 }
 
 model Raffle {
