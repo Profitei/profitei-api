@@ -2,7 +2,7 @@
 # BUILD FOR LOCAL DEVELOPMENT
 ###################
 
-FROM node:21-alpine As development
+FROM node:21-alpine3.18 As development
 
 WORKDIR /usr/src/app
 
@@ -18,7 +18,7 @@ USER node
 # BUILD FOR PRODUCTION
 ###################
 
-FROM node:21-alpine As build
+FROM node:21-alpine3.18 As build
 
 WORKDIR /usr/src/app
 
@@ -40,9 +40,9 @@ USER node
 # PRODUCTION
 ###################
 
-FROM node:21-alpine As production
+FROM node:21-alpine3.18 As production
 
 COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=build /usr/src/app/dist ./dist
 
-CMD [ "start:prod"]
+CMD [ "npm", "run", "start:prod"]
