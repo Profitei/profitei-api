@@ -1,11 +1,11 @@
-.PHONY: help start stop install test package
+.PHONY: help start stop install test package compose
 
 help: ## Show this help
 	@egrep -h '\s##\s' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 start: ## Starts docker-compose and the application
 	@echo "Starting PostgresSQL"
-	@docker compose up -d
+	@docker-compose up -d
 	@echo "Installing NestJS CLI"
 	@npm i -g @nestjs/cli
 	@echo "Installing dependencies"
@@ -15,7 +15,7 @@ start: ## Starts docker-compose and the application
 
 stop: ## Stops docker-compose
 	@echo "Stopping PostgresSQL"
-	@docker compose down
+	@docker-compose down
 
 install: ## Installs dependencies
 	@echo "Installing dependencies"
@@ -24,3 +24,7 @@ install: ## Installs dependencies
 test: ## Runs test suite
 	@echo "Running tests"
 	@npm run test
+
+compose: ## Compose UP Postgres
+	@echo "Starting PostgresSQL"
+	@docker-compose up -d
