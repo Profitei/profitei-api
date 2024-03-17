@@ -5,7 +5,9 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 // Define the bootstrap function
 async function bootstrap() {
   // Create a NestJS application instance by passing the AppModule to the NestFactory
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: ['error', 'warn', 'log', 'debug', 'verbose'],
+  });
 
   // Use DocumentBuilder to create a new Swagger document configuration
   const config = new DocumentBuilder()
