@@ -30,6 +30,8 @@ COPY --chown=node:node . .
 
 RUN npm run build
 
+RUN npx prisma migrate deploy
+
 ENV NODE_ENV production
 
 RUN npm ci --only=production && npm cache clean --force
