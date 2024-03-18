@@ -1,42 +1,20 @@
-###################
-# BUILD FOR LOCAL DEVELOPMENT
-###################
-
-FROM node:21-alpine3.18 As development
-
-WORKDIR /usr/src/app
-
-COPY --chown=node:node package*.json ./
-
-RUN npm ci
-
-COPY --chown=node:node . .
-
-USER node
-
-###################
-# BUILD FOR PRODUCTION
-###################
-
 FROM node:21-alpine3.18 As build
 
 WORKDIR /usr/src/app
 
-COPY --chown=node:node package*.json ./
+COPY package*.json  ./
 
-COPY --chown=node:node --from=development /usr/src/app/node_modules ./node_modules
+RUN npm ci
 
-COPY --chown=node:node . .
+COPY . .
 
 RUN npm run build
 
-# RUN npm run prisma:deploy
+RUN echo "DATABASE_URL=postgres://recipe:RecipePassword@postgres:5432/recipe" > .env
+
+RUN npm run prisma:generate
 
 ENV NODE_ENV production
-
-RUN npm ci --only=production && npm cache clean --force
-
-USER node
 
 ###################
 # PRODUCTION
@@ -44,7 +22,12 @@ USER node
 
 FROM node:21-alpine3.18 As production
 
-COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
-COPY --chown=node:node --from=build /usr/src/app/dist ./dist
+WORKDIR /usr/src/app
 
+COPY --from=build /usr/src/app/package*.json ./
+
+COPY  --from=build usr/src/app/dist ./dist
+COPY  --from=build usr/src/app/node_modules ./node_modules
+
+EXPOSE 3000
 CMD [ "npm", "run", "start:prod"]
