@@ -30,7 +30,7 @@ COPY --chown=node:node . .
 
 RUN npm run build
 
-RUN npm run prisma:deploy
+# RUN npm run prisma:deploy
 
 ENV NODE_ENV production
 
