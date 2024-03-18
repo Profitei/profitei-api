@@ -1,6 +1,19 @@
 services:
-  postgres:
+  profitei:
+    image: profitei
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - '3000:3000'
+    networks:
+      - profitei
+    depends_on:
+      - profitei-db
+  profitei-db:
     image: postgres:13.5
+    container_name: profitei-db
     restart: always
     environment:
       - POSTGRES_USER=recipe
@@ -8,6 +21,14 @@ services:
     volumes:
       - postgres:/var/lib/postgresql/data
     ports:
-      - '5444:5432'
+      - '5432:5432'
+    networks:
+      - profitei
+
 volumes:
   postgres:
+
+networks:
+  profitei:
+    name: profitei
+    driver: bridge
