@@ -44,7 +44,7 @@ export class RaffleService {
   }
 
   private mapDtoToPrismaInput(dto: CreateRaffleDto) {
-    const prismaInput = {
+    const prismaInput: CreateRafflePrismaInput = {
       name: dto.name,
       image: dto.image,
       price: dto.price,
@@ -88,4 +88,18 @@ export class RaffleService {
 export enum RaffleStatus {
   AVAILABLE = 'AVAILABLE',
   UNAVILABLE = 'UNAVILABLE',
+}
+
+export interface CreateRafflePrismaInput {
+  name: string;
+  image: string;
+  price: number;
+  category: {
+    create: {
+      name: string;
+    };
+  };
+  status: RaffleStatus;
+  properties: any;
+  tickets: any;
 }
