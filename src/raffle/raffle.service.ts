@@ -20,7 +20,13 @@ export class RaffleService {
     });
   }
   findAll() {
-    return this.prisma.raffle.findMany();
+    return this.prisma.raffle.findMany({
+      include: {
+        category: true,
+        properties: true,
+        tickets: true,
+      },
+    });
   }
 
   findOne(id: number) {
