@@ -32,10 +32,10 @@ model Ticket {
   name     String    @unique
   winner   Boolean
   status   Status    @default(AVAILABLE)
-  Raffle   Raffle?   @relation(fields: [raffleId], references: [id])
-  raffleId Int?
-  user     User      @relation(fields: [userId], references: [id])
-  userId   Int
+  Raffle   Raffle    @relation(fields: [raffleId], references: [id])
+  raffleId Int
+  user     User?     @relation(fields: [userId], references: [id])
+  userId   Int?
   created  DateTime  @default(now()) @map("created_at")
   modified DateTime? @updatedAt @map("updated_at")
 }
