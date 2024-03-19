@@ -2,8 +2,6 @@ services:
   profitei:
     image: profitei
     build: .
-    environment:
-      - DATABASE_URL=postgres://recipe:RecipePassword@postgres:5432/recipe
     ports:
       - '3000:3000'
     depends_on:
