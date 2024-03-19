@@ -6,7 +6,7 @@ import { readFileSync } from 'fs';
 
 @Injectable()
 export class RaffleService {
-  private nicknames: { name: string }[];
+  private nicknames: string[];
   private readonly logger = new Logger(RaffleService.name);
 
   constructor(private readonly prisma: PrismaService) {
@@ -43,36 +43,34 @@ export class RaffleService {
       image: dto.image,
       price: dto.price,
       category: {
-        connect: {
-          id: this.someCategoryIdFunction(dto.category),
+        create: {
+          name: dto.category,
         },
       },
       status: RaffleStatus.AVAILABLE,
-      properties: {
-        createMany: {
-          data: dto.properties?.map((property) => ({
-            name: property.name,
-            value: property.value,
-          })),
-        },
-      },
+      properties: this.createProperties(dto.properties),
       tickets: this.createTickets(dto.quantity),
     };
 
     return prismaInput;
   }
 
-  private createTickets(quantity: number) {
-    const data = Array.from({ length: quantity }, (_, index) => ({
-      name: this.nicknames[index]?.name || `Ticket ${index + 1}`,
-      winner: false,
+  private createProperties(properties: Record<string, any>[]) {
+    const data = properties.map((property) => ({
+      name: Object.keys(property)[0],
+      value: Object.values(property)[0],
     }));
 
     return { createMany: { data } };
   }
 
-  private someCategoryIdFunction(categoryName?: string): number {
-    return 1;
+  private createTickets(quantity: number) {
+    const data = Array.from({ length: quantity }, (_, index) => ({
+      name: this.nicknames[index] || `Ticket ${index + 1}`,
+      winner: false,
+    }));
+
+    return { createMany: { data } };
   }
   private loadNicknames() {
     this.nicknames = JSON.parse(

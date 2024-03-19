@@ -23,12 +23,10 @@ export class CreateRaffleDto {
 
   @ApiProperty({
     example: [
-      {
-        float: 0.1402356476,
-        Rarity: 'Covert',
-        Pattern: '945',
-        MarketPrice: 546.43,
-      },
+      { float: '0.1402356476' },
+      { Rarity: 'Covert' },
+      { Pattern: '945' },
+      { MarketPrice: '546.43' },
     ],
     type: 'array',
     items: { type: 'object', additionalProperties: true },
