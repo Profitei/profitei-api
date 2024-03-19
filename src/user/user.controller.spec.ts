@@ -41,7 +41,6 @@ describe('UserController', () => {
     it('should return all users', async () => {
       const expectedUsers = mockUsers();
       jest.spyOn(userService, 'findAll').mockResolvedValue(expectedUsers);
-      1
       const result = await controller.findAll();
 
       expect(userService.findAll).toHaveBeenCalledTimes(1);
@@ -68,7 +67,14 @@ describe('UserController', () => {
     it('should update a user', async () => {
       const userId = '1';
       const updateUserDto = { name: 'John Doe' };
-      const expectedUser = { id: 1, name: 'John Doe', cpf: '2121212', email: 'value', created: new Date(), ...mockVolatileValues() };
+      const expectedUser = {
+        id: 1,
+        name: 'John Doe',
+        cpf: '2121212',
+        email: 'value',
+        created: new Date(),
+        ...mockVolatileValues(),
+      };
 
       jest.spyOn(userService, 'update').mockResolvedValue(expectedUser);
 
@@ -93,7 +99,4 @@ describe('UserController', () => {
       expect(userService.remove).toHaveBeenCalledTimes(1);
     });
   });
-
-
-
 });
