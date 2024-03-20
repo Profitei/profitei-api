@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  /* TODO document why this async function 'main' is empty */
+  /* TODO document why this async function 'main' is empty, implement */
 }
 main()
   .then(async () => {

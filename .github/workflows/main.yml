@@ -22,6 +22,7 @@ jobs:
           since_last_remote_commit: true
           files: |
             prisma/**
+            .github/**
   deploy-profitei-stage:
     runs-on: ubuntu-latest
     steps:
