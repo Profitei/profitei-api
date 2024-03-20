@@ -1,7 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-async function main() { }
+async function main() {
+  /* TODO document why this async function 'main' is empty */
+}
 main()
   .then(async () => {
     await prisma.$disconnect();
