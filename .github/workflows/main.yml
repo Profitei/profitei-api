@@ -10,7 +10,7 @@ jobs:
   check-changed:
     runs-on: ubuntu-latest
     outputs:
-      changed-files-database: ${{ steps.changed-files-database.outputs.any_changed }}
+      changed-files-database: ${{ steps.changed-files.outputs.any_changed }}
     name: Test changed-files
     steps:
       - uses: actions/checkout@v4
