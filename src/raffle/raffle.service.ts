@@ -3,6 +3,7 @@ import { CreateRaffleDto } from './dto/create-raffle.dto';
 import { UpdateRaffleDto } from './dto/update-raffle.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { readFileSync } from 'fs';
+import { join } from 'path';
 
 @Injectable()
 export class RaffleService {
@@ -79,9 +80,8 @@ export class RaffleService {
     return { createMany: { data } };
   }
   private loadNicknames() {
-    this.nicknames = JSON.parse(
-      readFileSync('src/raffle/data/csgo_pro_nicknames.json', 'utf8'),
-    );
+    const filePath = join(__dirname, 'data', 'csgo_pro_nicknames.json');
+    this.nicknames = JSON.parse(readFileSync(filePath, 'utf8'));
   }
 }
 
