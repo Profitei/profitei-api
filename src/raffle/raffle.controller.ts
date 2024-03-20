@@ -10,8 +10,9 @@ import {
 import { RaffleService } from './raffle.service';
 import { CreateRaffleDto } from './dto/create-raffle.dto';
 import { UpdateRaffleDto } from './dto/update-raffle.dto';
-import { ApiCreatedResponse } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('raffle')
 @Controller('raffle')
 export class RaffleController {
   constructor(private readonly raffleService: RaffleService) {}
