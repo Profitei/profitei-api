@@ -80,8 +80,12 @@ export class RaffleService {
     return { createMany: { data } };
   }
   private loadNicknames() {
-    const filePath = join(__dirname, 'data', 'csgo_pro_nicknames.json');
-    this.nicknames = JSON.parse(readFileSync(filePath, 'utf8'));
+    this.logger.log(
+      'Path: ' + join(process.cwd(), 'data/csgo_pro_nicknames.json'),
+    );
+    this.nicknames = JSON.parse(
+      readFileSync(join(process.cwd(), 'data/csgo_pro_nicknames.json'), 'utf8'),
+    );
   }
 }
 
