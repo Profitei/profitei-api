@@ -37,7 +37,7 @@ export class RaffleService {
   }
 
   update(id: number, updateRaffleDto: UpdateRaffleDto) {
-    return `This action updates a #${id} raffle`;
+    return `This action updates a #${updateRaffleDto.category} raffle`;
   }
 
   remove(id: number) {

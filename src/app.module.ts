@@ -6,4 +6,4 @@ import { RaffleModule } from './raffle/raffle.module';
 @Module({
   imports: [PrismaModule, UserModule, RaffleModule],
 })
-export class AppModule { }
+export class AppModule {}
