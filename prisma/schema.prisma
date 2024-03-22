@@ -13,8 +13,58 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Armes {
-  id    Int     @id @default(autoincrement())
-  name  String
-  image String
+model Raffle {
+  id         Int          @id @default(autoincrement())
+  name       String
+  image      String
+  price      Float
+  tickets    Ticket[]
+  properties Properties[]
+  category   Category     @relation(fields: [categotyId], references: [id])
+  categotyId Int
+  status     Status       @default(AVAILABLE)
+  created    DateTime     @default(now()) @map("created_at")
+  modified   DateTime?    @updatedAt @map("updated_at")
+}
+
+model Ticket {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  winner   Boolean
+  status   Status    @default(AVAILABLE)
+  Raffle   Raffle    @relation(fields: [raffleId], references: [id])
+  raffleId Int
+  user     User?     @relation(fields: [userId], references: [id])
+  userId   Int?
+  created  DateTime  @default(now()) @map("created_at")
+  modified DateTime? @updatedAt @map("updated_at")
+}
+
+enum Status {
+  AVAILABLE
+  UNAVILABLE
+}
+
+model Properties {
+  id       Int     @id @default(autoincrement())
+  name     String
+  value    String
+  raffleId Int?
+  Raffle   Raffle? @relation(fields: [raffleId], references: [id])
+}
+
+model Category {
+  id     Int      @id @default(autoincrement())
+  name   String
+  Raffle Raffle[]
+}
+
+model User {
+  id       Int       @id @default(autoincrement())
+  name     String
+  email    String    @unique
+  cpf      String
+  Ticket   Ticket[]
+  created  DateTime  @default(now()) @map("created_at")
+  modified DateTime? @updatedAt @map("updated_at")
 }

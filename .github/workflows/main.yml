@@ -7,46 +7,49 @@ on:
       - stage
 
 jobs:
-  check-changed-apps:
+  check-changed:
     runs-on: ubuntu-latest
     outputs:
-      changed-files-database: ${{ steps.changed-files-database.outputs.any_changed }}
+      changed-files-database: ${{ steps.changed-files.outputs.any_changed }}
+    name: Test changed-files
     steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-    - name: Check changes on prisma
-      id: changed-files-database
-      uses: tj-actions/changed-files@v39
-      with:
-        since_last_remote_commit: true
-        files: |
-          prisma/**      
-  deploy-strapi:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v43
+        with:
+          files: |
+            prisma/**
+            .github/**
+  deploy-profitei-stage:
     runs-on: ubuntu-latest
     steps:
       - name: Cloning repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Push to dokku
         uses: dokku/github-action@master
         with:
-          branch: "main"
-          git_remote_url: ssh://dokku@stage.profitei.net
+          branch: 'main'
+          git_remote_url: ssh://dokku@apps.profitei.net/profitei-api
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_STAGING }}
-          git_push_flags: "--force"
+          git_push_flags: '--force'
   execute-database:
+    needs: check-changed
     runs-on: ubuntu-latest
-    if: needs.check-changed-apps.outputs.changed-files-database == 'true'
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    if: needs.check-changed.outputs.changed-files-database == 'true'
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
-      - run: prisma:deploy
-  
-          
+      - name: Install Dependencies
+        run: npm ci
+      - name: Run production migration
+        run: npm run prisma:deploy
