@@ -2,19 +2,18 @@ name: 'Quality'
 
 on:
   workflow_dispatch:
+permissions:
+  checks: write
 
 jobs:
   setup:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: ['18.17.0']
     name: 'Setup'
     steps:
-      - name: '⚙ Set up Node.js v${{ matrix.node }}'
-        uses: actions/setup-node@v3
+      - name: '⚙ Set up Node.js v4'
+        uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node }}
+          node-version: '20.x'
 
       - name: '✅ Checkout repository'
         uses: actions/checkout@v4
@@ -24,7 +23,7 @@ jobs:
     needs: setup
     name: 'Build'
     steps:
-      - name: '⚙ Set up Node.js v${{ matrix.node }}'
+      - name: '⚙ Set up Node.js v4'
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
@@ -56,19 +55,19 @@ jobs:
       - name: '📦 Install packages'
         run: npm install
 
-      - name: '🔦 Lint'
-        run: npm run lint
-
-      - name: '💅 Lint'
+      - name: '🔦 Build'
         run: npm run build
 
+      - name: '💅 Lint'
+        run: npm run lint
+
       - name: '👨‍💻 Run Test'
-        run: rpm run test
+        run: npm run test:cov
         env:
           NODE_ENV: 'test'
 
       - name: '📊 Publish Test Report'
-        uses: mikepenz/action-junit-report@v3
+        uses: mikepenz/action-junit-report@v4
         if: always()
         with:
           report_paths: '**/junit.xml'
@@ -78,21 +77,3 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: Profitei/profitei-api
-
-      - name: '📊 SonarCloud Scan'
-        uses: SonarSource/sonarcloud-github-action@master
-        with:
-          args: >
-            -Dsonar.organization=${{ github.repository_owner }}
-            -Dsonar.projectKey=${{ github.repository_owner }}_${{ github.event.repository.name }}
-            -Dsonar.projectName=${{ github.repository_owner }}_${{ github.event.repository.name }}
-            -Dsonar.projectVersion=1.0
-            -Dsonar.sourceEncoding=UTF-8
-            -Dsonar.sources=./src
-            -Dsonar.exclusions=**/*.bin,node_modules/**,test/**,**/__test__/**,**/__mocks__/**,src/main.ts
-            -Dsonar.coverage.exclusions=node_modules/**,test/**,**/__test__/**,**/__mocks__/**,src/main.ts
-            -Dsonar.testExecutionReportPaths=test-report.xml
-            -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
