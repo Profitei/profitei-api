@@ -10,8 +10,9 @@ import {
 import { RaffleService } from './raffle.service';
 import { CreateRaffleDto } from './dto/create-raffle.dto';
 import { UpdateRaffleDto } from './dto/update-raffle.dto';
-import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiTags, ApiSecurity } from '@nestjs/swagger';
 
+@ApiSecurity('api-key')
 @ApiTags('raffle')
 @Controller('raffle')
 export class RaffleController {
