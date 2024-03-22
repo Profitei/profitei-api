@@ -41,6 +41,7 @@ describe('CategoryService', () => {
 
   describe('findAll', () => {
     it('should return an array of categories', async () => {
+      jest.spyOn(prismaService.category, 'findMany').mockResolvedValue([]);
       const categories = await prismaService.category.findMany();
 
       expect(categories).toBeDefined();
