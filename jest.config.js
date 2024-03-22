@@ -23,7 +23,7 @@ module.exports = {
     'lcov',
   ],
   collectCoverage: true,
-  eporters: [
+  reporters: [
     'default',
     [
       'jest-junit',
