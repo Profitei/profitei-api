@@ -2,11 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { RaffleController } from './raffle.controller';
 import { RaffleService } from './raffle.service';
 import { PrismaService } from '../prisma/prisma.service';
-import {
-  mockCreateRaffle,
-  mockExpectedCreateRaffle,
-  mockExpectedFindAllRaffle,
-} from './raffle.mock';
+import { mockCreateRaffle, mockExpectedCreateRaffle } from './raffle.mock';
 
 describe('RaffleController', () => {
   let controller: RaffleController;

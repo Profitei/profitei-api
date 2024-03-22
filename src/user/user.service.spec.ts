@@ -36,12 +36,16 @@ describe('UserService', () => {
 
       const createdUser = mockCreateUser();
 
-      jest.spyOn(prismaService.user, 'create').mockResolvedValue({ ...createdUser, ...mockVolatileValues() });
+      jest
+        .spyOn(prismaService.user, 'create')
+        .mockResolvedValue({ ...createdUser, ...mockVolatileValues() });
 
       const result = await service.create(createUserDto);
 
       expect(result).toEqual({ ...createdUser, ...mockVolatileValues() });
-      expect(prismaService.user.create).toHaveBeenCalledWith({ data: createUserDto });
+      expect(prismaService.user.create).toHaveBeenCalledWith({
+        data: createUserDto,
+      });
       expect(prismaService.user.create).toHaveBeenCalledTimes(1);
     });
   });
@@ -49,8 +53,22 @@ describe('UserService', () => {
   describe('findAll', () => {
     it('should return an array of users', async () => {
       const mockUsers = [
-        { id: 1, name: 'John Doe', email: 'john.doe@example.com', cpf: '123456789', created: new Date(), modified: new Date() },
-        { id: 2, name: 'Jane Smith', email: 'jane.smith@example.com', cpf: '1234567891', created: new Date(), modified: new Date() },
+        {
+          id: 1,
+          name: 'John Doe',
+          email: 'john.doe@example.com',
+          cpf: '123456789',
+          created: new Date(),
+          modified: new Date(),
+        },
+        {
+          id: 2,
+          name: 'Jane Smith',
+          email: 'jane.smith@example.com',
+          cpf: '1234567891',
+          created: new Date(),
+          modified: new Date(),
+        },
       ];
 
       jest.spyOn(prismaService.user, 'findMany').mockResolvedValue(mockUsers);
@@ -65,14 +83,23 @@ describe('UserService', () => {
   describe('findOne', () => {
     it('should find a user by id', async () => {
       const userId = 1;
-      const mockUser = { id: userId, name: 'John Doe', email: 'john.doe@example.com', cpf: '123456789', created: new Date(), modified: new Date() };
+      const mockUser = {
+        id: userId,
+        name: 'John Doe',
+        email: 'john.doe@example.com',
+        cpf: '123456789',
+        created: new Date(),
+        modified: new Date(),
+      };
 
       jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(mockUser);
 
       const result = await service.findOne(userId);
 
       expect(result).toEqual(mockUser);
-      expect(prismaService.user.findUnique).toHaveBeenCalledWith({ where: { id: userId } });
+      expect(prismaService.user.findUnique).toHaveBeenCalledWith({
+        where: { id: userId },
+      });
       expect(prismaService.user.findUnique).toHaveBeenCalledTimes(1);
     });
   });
@@ -89,12 +116,17 @@ describe('UserService', () => {
 
       const updatedUser = mockCreateUser();
 
-      jest.spyOn(prismaService.user, 'update').mockResolvedValue({ ...updatedUser, ...mockVolatileValues() });
+      jest
+        .spyOn(prismaService.user, 'update')
+        .mockResolvedValue({ ...updatedUser, ...mockVolatileValues() });
 
       const result = await service.update(userId, updateUserDto);
 
       expect(result).toEqual({ ...updatedUser, ...mockVolatileValues() });
-      expect(prismaService.user.update).toHaveBeenCalledWith({ where: { id: userId }, data: updateUserDto });
+      expect(prismaService.user.update).toHaveBeenCalledWith({
+        where: { id: userId },
+        data: updateUserDto,
+      });
       expect(prismaService.user.update).toHaveBeenCalledTimes(1);
     });
   });
@@ -102,16 +134,24 @@ describe('UserService', () => {
   describe('remove', () => {
     it('should remove a user by id', async () => {
       const userId = 1;
-      const mockUser = { id: userId, name: 'John Doe', email: 'john.doe@example.com', cpf: '123456789', created: new Date(), modified: new Date() };
+      const mockUser = {
+        id: userId,
+        name: 'John Doe',
+        email: 'john.doe@example.com',
+        cpf: '123456789',
+        created: new Date(),
+        modified: new Date(),
+      };
 
       jest.spyOn(prismaService.user, 'delete').mockResolvedValue(mockUser);
 
       const result = await service.remove(userId);
 
       expect(result).toEqual(mockUser);
-      expect(prismaService.user.delete).toHaveBeenCalledWith({ where: { id: userId } });
+      expect(prismaService.user.delete).toHaveBeenCalledWith({
+        where: { id: userId },
+      });
       expect(prismaService.user.delete).toHaveBeenCalledTimes(1);
     });
   });
 });
-
