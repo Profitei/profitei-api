@@ -36,7 +36,6 @@ export class CreateRaffleDto {
   properties?: Record<string, any>[];
 
   @ApiProperty({ example: 'rifle' })
-  @IsString()
-  @IsOptional()
-  category?: string;
+  @IsNumber()
+  categoryId: number;
 }

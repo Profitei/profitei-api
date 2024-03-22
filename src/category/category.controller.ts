@@ -13,7 +13,7 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { ApiCreatedResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 
 @ApiSecurity('api-key')
-@ApiTags('Category')
+@ApiTags('category')
 @Controller('category')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
@@ -25,7 +25,7 @@ export class CategoryController {
   }
 
   @ApiCreatedResponse({ type: CreateCategoryDto, isArray: true })
-  @Post()
+  @Post('many')
   createMany(@Body() createCategoryDto: CreateCategoryDto[]) {
     return this.categoryService.createMany(createCategoryDto);
   }

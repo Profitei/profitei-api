@@ -5,6 +5,7 @@ export const mockCreateRaffle = () => ({
   image: 'none',
   price: 5,
   quantity: 5,
+  categoryId: 1,
   properties: [
     { name: 'Property 1', value: 'Value 1' },
     { name: 'Property 2', value: 'Value 2' },
@@ -112,8 +113,8 @@ export const mockCalledWith = () => ({
   image: 'none',
   price: 5,
   category: {
-    create: {
-      name: undefined,
+    connect: {
+      id: 1,
     },
   },
   properties: {
