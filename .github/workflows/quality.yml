@@ -1,6 +1,11 @@
 name: 'Quality'
 
 on:
+  push:
+    branches:
+      - main
+      - stage
+      - dev
   workflow_dispatch:
 permissions:
   checks: write
