@@ -37,7 +37,7 @@ export class RaffleService {
   }
 
   update(id: number, updateRaffleDto: UpdateRaffleDto) {
-    return `This action updates a #${updateRaffleDto.category} raffle`;
+    return `This action updates a #${updateRaffleDto.categoryId} raffle`;
   }
 
   remove(id: number) {
@@ -50,8 +50,8 @@ export class RaffleService {
       image: dto.image,
       price: dto.price,
       category: {
-        create: {
-          name: dto.category,
+        connect: {
+          id: dto.categoryId,
         },
       },
       status: RaffleStatus.AVAILABLE,
@@ -99,8 +99,8 @@ export interface CreateRafflePrismaInput {
   image: string;
   price: number;
   category: {
-    create: {
-      name: string;
+    connect: {
+      id: number;
     };
   };
   status: RaffleStatus;
