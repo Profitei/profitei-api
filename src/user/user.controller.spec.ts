@@ -24,16 +24,16 @@ describe('UserController', () => {
   });
 
   describe('create', () => {
-    it('should create a new user', () => {
+    it('should create a new user', async () => {
       const createUserDto: CreateUserDto = mockCreateUser();
       const expectedUser = { ...mockCreateUser(), ...mockVolatileValues() };
 
       jest.spyOn(userService, 'create').mockResolvedValue(expectedUser);
 
-      const result = controller.create(createUserDto);
+      const result = await controller.create(createUserDto);
 
       expect(userService.create).toHaveBeenCalledWith(createUserDto);
-      expect(result).toEqual(Promise.resolve(expectedUser));
+      expect(result).toEqual(expectedUser);
       expect(userService.create).toHaveBeenCalledTimes(1);
     });
   });
