@@ -8,4 +8,3 @@ node_modules/
 .vscode
 npm-debug.log
 npm-debug.log.*
-junit.xml
