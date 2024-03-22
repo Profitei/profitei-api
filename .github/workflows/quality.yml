@@ -57,7 +57,7 @@ jobs:
         run: npm run build
 
       - name: '💅 Lint'
-        run: npm run build
+        run: npm run lint
 
       - name: '👨‍💻 Run Test'
         run: npm run test
