@@ -28,6 +28,11 @@ export class RaffleController {
     return this.raffleService.findAll();
   }
 
+  @Get('summary')
+  summary() {
+    return this.raffleService.findAllSummary();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.raffleService.findOne(+id);

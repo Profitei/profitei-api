@@ -30,9 +30,18 @@ export class RaffleService {
     });
   }
 
+  findAllSummary() {
+    return this.prisma.raffle.findMany();
+  }
+
   findOne(id: number) {
     return this.prisma.raffle.findUnique({
       where: { id },
+      include: {
+        category: true,
+        properties: true,
+        tickets: true,
+      },
     });
   }
 
