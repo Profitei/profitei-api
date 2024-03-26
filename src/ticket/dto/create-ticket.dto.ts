@@ -5,7 +5,7 @@ import {
   IsOptional,
   IsEnum,
 } from 'class-validator';
-import { AvaliableDto } from 'src/enums/avaliable.dto';
+import { AvaliableDto } from '../../enums/avaliable.dto';
 
 export class CreateTicketDto {
   @IsString()
