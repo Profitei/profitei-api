@@ -4,6 +4,7 @@ import { UserModule } from './user/user.module';
 import { RaffleModule } from './raffle/raffle.module';
 import { CategoryModule } from './category/category.module';
 import { TicketModule } from './ticket/ticket.module';
+import { PropertiesModule } from './properties/properties.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { TicketModule } from './ticket/ticket.module';
     RaffleModule,
     CategoryModule,
     TicketModule,
+    PropertiesModule,
   ],
 })
 export class AppModule {}
