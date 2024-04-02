@@ -5,7 +5,7 @@ import {
   IsOptional,
   IsEnum,
 } from 'class-validator';
-import { AvaliableDto } from '../../enums/avaliable.dto';
+import { AvailableDto } from '../../enums/available.dto';
 
 export class CreateTicketDto {
   @IsString()
@@ -17,8 +17,8 @@ export class CreateTicketDto {
   winner: boolean;
 
   @IsOptional()
-  @IsEnum(AvaliableDto)
-  status?: AvaliableDto;
+  @IsEnum(AvailableDto)
+  status?: AvailableDto;
 
   @IsNotEmpty()
   raffleId: number;

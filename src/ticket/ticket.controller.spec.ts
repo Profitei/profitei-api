@@ -3,7 +3,7 @@ import { TicketController } from './ticket.controller';
 import { TicketService } from './ticket.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { Status } from '@prisma/client';
-import { AvaliableDto } from '../enums/avaliable.dto';
+import { AvailableDto } from '../enums/available.dto';
 
 describe('TicketController', () => {
   let controller: TicketController;
@@ -29,7 +29,7 @@ describe('TicketController', () => {
         name: 'Test Ticket',
         winner: true,
         raffleId: 1,
-        status: AvaliableDto.AVAILABLE,
+        status: AvailableDto.AVAILABLE,
         userId: 1,
       };
 
