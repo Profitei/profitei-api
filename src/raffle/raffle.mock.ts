@@ -54,7 +54,6 @@ export const mockExpectedCreateRaffle = () => ({
   categoryId: 1,
   status: RaffleStatus.AVAILABLE,
   id: 1,
-  categotyId: 1,
   created: new Date(),
   modified: new Date(),
 });
@@ -102,7 +101,6 @@ export const mockExpectedFindAllRaffle = () => [
     categoryId: 1,
     status: RaffleStatus.AVAILABLE,
     id: 1,
-    categotyId: 1,
     created: new Date(),
     modified: new Date(),
   },

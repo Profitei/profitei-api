@@ -20,8 +20,8 @@ model Raffle {
   price      Float
   tickets    Ticket[]
   properties Properties[]
-  category   Category     @relation(fields: [categotyId], references: [id])
-  categotyId Int
+  category   Category     @relation(fields: [categoryId], references: [id])
+  categoryId Int
   status     Status       @default(AVAILABLE)
   created    DateTime     @default(now()) @map("created_at")
   modified   DateTime?    @updatedAt @map("updated_at")
