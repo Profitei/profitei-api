@@ -42,6 +42,7 @@ describe('TicketController', () => {
         userId: 1,
         modified: new Date(),
         created: new Date(),
+        orderId: null,
       };
 
       jest.spyOn(service, 'create').mockResolvedValue(expected);
@@ -73,6 +74,7 @@ describe('TicketController', () => {
         userId: 1,
         modified: new Date(),
         created: new Date(),
+        orderId: null,
       };
 
       jest.spyOn(service, 'findOne').mockResolvedValue(expected);
@@ -95,6 +97,7 @@ describe('TicketController', () => {
         userId: 1,
         modified: new Date(),
         created: new Date(),
+        orderId: null,
       };
 
       jest.spyOn(service, 'update').mockResolvedValue(expected);

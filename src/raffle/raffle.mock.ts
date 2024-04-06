@@ -1,4 +1,4 @@
-import { RaffleStatus } from './raffle.service';
+import { AvailableDto } from '../enums/available.dto';
 
 export const mockCreateRaffle = () => ({
   name: 'Raffle Test',
@@ -52,7 +52,7 @@ export const mockExpectedCreateRaffle = () => ({
     },
   ],
   categoryId: 1,
-  status: RaffleStatus.AVAILABLE,
+  status: AvailableDto.AVAILABLE,
   id: 1,
   created: new Date(),
   modified: new Date(),
@@ -99,7 +99,7 @@ export const mockExpectedFindAllRaffle = () => [
       },
     ],
     categoryId: 1,
-    status: RaffleStatus.AVAILABLE,
+    status: AvailableDto.AVAILABLE,
     id: 1,
     created: new Date(),
     modified: new Date(),
@@ -123,7 +123,7 @@ export const mockCalledWith = () => ({
       ],
     },
   },
-  status: RaffleStatus.AVAILABLE,
+  status: AvailableDto.AVAILABLE,
   tickets: {
     createMany: {
       data: [
