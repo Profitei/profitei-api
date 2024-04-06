@@ -23,7 +23,7 @@
     "prisma:generate": "prisma generate",
     "prisma:deploy": "prisma migrate deploy",
     "prisma:dev": "prisma migrate dev",
-    "prisma:reset": "prisma migrate reset"
+    "prisma:reset": "prisma migrate reset --force"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
