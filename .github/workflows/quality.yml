@@ -59,6 +59,9 @@ jobs:
 
       - name: '📦 Install packages'
         run: npm install
+      
+      - name: 'Migrate Database'
+        run: npm run prisma:dev
 
       - name: '🔦 Build'
         run: npm run build
