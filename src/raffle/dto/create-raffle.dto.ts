@@ -23,10 +23,10 @@ export class CreateRaffleDto {
 
   @ApiProperty({
     example: [
-      { float: '0.1402356476' },
+      { Float: '0.1402356476' },
       { Rarity: 'Covert' },
       { Pattern: '945' },
-      { MarketPrice: '546.43' },
+      { MarketPrice: 'R$546.43' },
     ],
     type: 'array',
     items: { type: 'object', additionalProperties: true },
@@ -35,7 +35,7 @@ export class CreateRaffleDto {
   @IsOptional()
   properties?: Record<string, any>[];
 
-  @ApiProperty({ example: 'rifle' })
+  @ApiProperty({ example: '1' })
   @IsNumber()
   categoryId: number;
 }
