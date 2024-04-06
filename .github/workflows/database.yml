@@ -1,4 +1,4 @@
-name: Deploy dokku and database
+name: Reset Database
 
 on:
   workflow_dispatch:
