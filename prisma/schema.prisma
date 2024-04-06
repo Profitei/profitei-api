@@ -20,8 +20,8 @@ model Raffle {
   price      Float
   tickets    Ticket[]
   properties Properties[]
-  category   Category     @relation(fields: [categotyId], references: [id])
-  categotyId Int
+  category   Category     @relation(fields: [categoryId], references: [id])
+  categoryId Int
   status     Status       @default(AVAILABLE)
   created    DateTime     @default(now()) @map("created_at")
   modified   DateTime?    @updatedAt @map("updated_at")
@@ -36,15 +36,31 @@ model Ticket {
   raffleId Int
   user     User?     @relation(fields: [userId], references: [id])
   userId   Int?
+  Order    Order?    @relation(fields: [orderId], references: [id])
+  orderId  Int?
   created  DateTime  @default(now()) @map("created_at")
   modified DateTime? @updatedAt @map("updated_at")
 }
 
-enum Status {
-  AVAILABLE
-  UNAVILABLE
+model Order {
+  id       Int       @id @default(autoincrement())  
+  items   Ticket[]
+  created  DateTime  @default(now()) @map("created_at")
+  modified DateTime? @updatedAt @map("updated_at")
+  status  OrderStatus @default(PENDING)
+  details Json?
 }
 
+enum Status {
+  AVAILABLE
+  UNAVAILABLE
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  CANCELED
+}
 model Properties {
   id       Int     @id @default(autoincrement())
   name     String

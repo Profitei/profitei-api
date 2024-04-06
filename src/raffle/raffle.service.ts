@@ -4,6 +4,7 @@ import { UpdateRaffleDto } from './dto/update-raffle.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { AvailableDto } from '../enums/available.dto';
 
 @Injectable()
 export class RaffleService {
@@ -63,7 +64,7 @@ export class RaffleService {
           id: dto.categoryId,
         },
       },
-      status: RaffleStatus.AVAILABLE,
+      status: AvailableDto.AVAILABLE,
       properties: this.createProperties(dto.properties),
       tickets: this.createTickets(dto.quantity),
     };
@@ -98,11 +99,6 @@ export class RaffleService {
   }
 }
 
-export enum RaffleStatus {
-  AVAILABLE = 'AVAILABLE',
-  UNAVILABLE = 'UNAVILABLE',
-}
-
 export interface CreateRafflePrismaInput {
   name: string;
   image: string;
@@ -112,7 +108,7 @@ export interface CreateRafflePrismaInput {
       id: number;
     };
   };
-  status: RaffleStatus;
+  status: AvailableDto;
   properties: any;
   tickets: any;
 }
