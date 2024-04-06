@@ -1,7 +1,7 @@
-import { SecurityGuard } from './security.guard';
+import { FirebaseAuthGuard } from './firebase-auth.guard';
 
 describe('SecurityGuard', () => {
   it('should be defined', () => {
-    expect(new SecurityGuard()).toBeDefined();
+    expect(new FirebaseAuthGuard()).toBeDefined();
   });
 });
