@@ -47,7 +47,7 @@ export class OrderService {
     }
 
     return this.prisma.$transaction(async (tx) => {
-      tx.ticket.updateMany({
+      await tx.ticket.updateMany({
         where: {
           id: {
             in: createOrderDto.ticketsId,
@@ -58,7 +58,7 @@ export class OrderService {
           userId: 1,
         },
       });
-      return tx.order.create({
+      return await tx.order.create({
         data: {
           items: {
             connect: createOrderDto.ticketsId.map((id) => ({ id })),
@@ -70,11 +70,18 @@ export class OrderService {
   }
 
   findAll() {
-    return `This action returns all order`;
+    return this.prisma.order.findMany();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} order`;
+    return this.prisma.order.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        items: true,
+      },
+    });
   }
 
   update(id: number, updateOrderDto: UpdateOrderDto) {
