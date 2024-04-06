@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { FirebaseAuthGuard } from './guards/security/firebase-auth.guard';
+import { SecurityGuard } from './guards/security/security.guard';
 // Define the bootstrap function
 async function bootstrap() {
   // Create a NestJS application instance by passing the AppModule to the NestFactory
@@ -14,7 +14,7 @@ async function bootstrap() {
     .setTitle('Profitei API') // Set the title of the API
     .setDescription('Profitei API description') // Set the description of the API
     .setVersion('1.0') // Set the version of the API
-    .addBearerAuth() // Add bearer token authentication
+    .addApiKey({ type: 'apiKey', name: 'api-key', in: 'header' }, 'api-key')
     .build(); // Build the document
 
   // Create a Swagger document using the application instance and the document configuration
@@ -24,7 +24,7 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   // Apply Global Guard to use API-KEY
-  app.useGlobalGuards(new FirebaseAuthGuard());
+  app.useGlobalGuards(new SecurityGuard());
 
   // Start the application and listen for requests on port 3000
   await app.listen(3000);
