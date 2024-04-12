@@ -10,6 +10,7 @@ import {
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { ResponseOrderDto } from './dto/response-order.dto';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 
 @ApiSecurity('api-key')
@@ -19,8 +20,9 @@ export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @Post()
-  create(@Body() createOrderDto: CreateOrderDto) {
-    return this.orderService.create(createOrderDto);
+  async create(@Body() createOrderDto: CreateOrderDto) {
+    const response = await this.orderService.create(createOrderDto);
+    return new ResponseOrderDto(response);
   }
 
   @Get()
