@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { RaffleModule } from './raffle/raffle.module';
@@ -16,6 +18,7 @@ import { OrderModule } from './order/order.module';
     TicketModule,
     PropertiesModule,
     OrderModule,
+    ConfigModule.forRoot(),
   ],
 })
 export class AppModule {}
