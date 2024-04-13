@@ -14,7 +14,10 @@ async function bootstrap() {
     .setTitle('Profitei API') // Set the title of the API
     .setDescription('Profitei API description') // Set the description of the API
     .setVersion('1.0') // Set the version of the API
-    .addBearerAuth() // Add a Bearer Auth to the document
+    .addBearerAuth(
+      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT', in: 'header' },
+      'access-token',
+    )
     .addApiKey({ type: 'apiKey', name: 'api-key', in: 'header' }, 'api-key')
     .build(); // Build the document
 

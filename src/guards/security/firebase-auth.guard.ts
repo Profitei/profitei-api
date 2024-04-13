@@ -19,7 +19,7 @@ export class FirebaseAuthGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
-    
+
     if (isPublic) {
       return true;
     }
