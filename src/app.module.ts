@@ -8,6 +8,7 @@ import { CategoryModule } from './category/category.module';
 import { TicketModule } from './ticket/ticket.module';
 import { PropertiesModule } from './properties/properties.module';
 import { OrderModule } from './order/order.module';
+import { FirebaseAuthGuard } from './guards/security/firebase-auth.guard';
 
 @Module({
   imports: [
@@ -25,5 +26,6 @@ import { OrderModule } from './order/order.module';
       },
     ),
   ],
+  providers: [FirebaseAuthGuard],
 })
 export class AppModule {}
