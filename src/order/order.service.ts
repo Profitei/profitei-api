@@ -46,7 +46,7 @@ export class OrderService {
       throw new Error('Payment processing failed');
     }
 
-    return this.prisma.$transaction(async (tx) => {
+    const order = await this.prisma.$transaction(async (tx) => {
       await tx.ticket.updateMany({
         where: {
           id: {
@@ -58,7 +58,7 @@ export class OrderService {
           userId: 1,
         },
       });
-      return await tx.order.create({
+      const createdOrder = await tx.order.create({
         data: {
           items: {
             connect: createOrderDto.ticketsId.map((id) => ({ id })),
@@ -66,7 +66,26 @@ export class OrderService {
           details: paymentResult,
         },
       });
+
+      return await tx.order.findUnique({
+        where: {
+          id: createdOrder.id,
+        },
+        include: {
+          items: {
+            include: {
+              Raffle: true,
+            },
+          },
+        },
+      });
     });
+
+    return {
+      id: order.id,
+      tickets: order.items,
+      paymentData: order.details,
+    };
   }
 
   findAll() {

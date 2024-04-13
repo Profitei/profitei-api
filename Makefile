@@ -25,6 +25,10 @@ test: ## Runs test suite
 	@echo "Running tests"
 	@npm run test
 
-compose: ## Compose UP Postgres
+compose: ## Compose UP Application
 	@echo "Starting PostgresSQL"
 	@docker-compose up -d
+
+postgres:
+	@echo "Starting PostgresSQL"
+	@docker-compose up -d postgres
