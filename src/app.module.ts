@@ -18,7 +18,12 @@ import { OrderModule } from './order/order.module';
     TicketModule,
     PropertiesModule,
     OrderModule,
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot(
+      {
+        isGlobal: true,
+        envFilePath: ['.env', '.env.local'],
+      },
+    ),
   ],
 })
 export class AppModule {}
