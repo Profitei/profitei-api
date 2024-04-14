@@ -52,7 +52,7 @@ jobs:
       - run: |
           kustomize edit set image evmartinelli/profitei:latest=evmartinelli/profitei:${{ github.sha }}
           git add .
-          git commit -m "Set `app` image tag to `${GITHUB_SHA}`"
+          git commit -m "Set `profitei` image tag to `${GITHUB_SHA}`"
           git push
 
   # execute-database:
