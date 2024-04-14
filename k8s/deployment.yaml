@@ -14,7 +14,7 @@ spec:
       automountServiceAccountToken: false
       containers:
       - name: profitei-api
-        image: evmartinelli/profitei:latest
+        image: evmartinelli/profitei
         resources:
           limits:
             memory: "128Mi"
