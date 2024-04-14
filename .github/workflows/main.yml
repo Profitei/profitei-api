@@ -49,9 +49,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: imranismail/setup-kustomize@v2
-      - run: |
+      - name: update k8s
+        run: |
           cd k8s
-          kustomize edit set image evmartinelli/profitei:latest=evmartinelli/profitei:${{ github.sha }}
+          kustomize edit set image kustomize edit set image evmartinelli/profitei:latest=evmartinelli/profitei:${{ github.sha }}
+          cat kustomization.yaml
+      
+      - name: commit
+        run: |          
+          git config --global user.email "gh@action.com"
+          git config --global user.name "GH Actions"
           git add .
           git commit -m "Set `profitei` image tag to `${GITHUB_SHA}`"
           git push
