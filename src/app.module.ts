@@ -19,12 +19,10 @@ import { FirebaseAuthGuard } from './guards/security/firebase-auth.guard';
     TicketModule,
     PropertiesModule,
     OrderModule,
-    ConfigModule.forRoot(
-      {
-        isGlobal: true,
-        envFilePath: ['.env', '.env.local'],
-      },
-    ),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: ['.env', '.env.local'],
+    }),
   ],
   providers: [FirebaseAuthGuard],
 })

@@ -22,7 +22,7 @@ export class PropertiesController {
   create(@Body() createPropertyDto: CreatePropertyDto) {
     return this.propertiesService.create(createPropertyDto);
   }
-  
+
   @Public()
   @Get()
   findAll() {
