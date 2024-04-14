@@ -52,7 +52,7 @@ jobs:
       - name: update k8s
         run: |
           cd k8s
-          kustomize edit set image kustomize edit set image evmartinelli/profitei:latest=evmartinelli/profitei:${{ github.sha }}
+          kustomize edit set image evmartinelli/profitei:latest=evmartinelli/profitei:${{ github.sha }}
           cat kustomization.yaml
       
       - name: commit
