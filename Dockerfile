@@ -1,4 +1,4 @@
-FROM node:21-alpine3.18 As build
+FROM node:21-alpine3.18 AS build
 
 WORKDIR /usr/src/app
 
@@ -8,11 +8,9 @@ RUN npm ci
 
 COPY . .
 
-RUN npm run build
-
-RUN echo "DATABASE_URL=postgres://recipe:RecipePassword@postgres:5432/recipe" > .env
-
 RUN npm run prisma:generate
+
+RUN npm run build
 
 ENV NODE_ENV production
 
@@ -20,7 +18,7 @@ ENV NODE_ENV production
 # PRODUCTION
 ###################
 
-FROM node:21-alpine3.18 As production
+FROM node:21-alpine3.18 AS production
 
 WORKDIR /usr/src/app
 
