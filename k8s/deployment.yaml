@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: profitei-api
+spec:
+  selector:
+    matchLabels:
+      app: profitei-api
+  template:
+    metadata:
+      labels:
+        app: profitei-api
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: profitei-api
+        image: evmartinelli/profitei:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 3000
