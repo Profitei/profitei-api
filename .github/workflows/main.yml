@@ -60,10 +60,8 @@ jobs:
           git config --global user.email "gh@action.com"
           git config --global user.name "GH Actions"
           git commit -am "Set `profitei` image tag to `${GITHUB_SHA}`"
-
-      - name: push
-        uses: ad-m/github-push-action@master
-
+          git push
+          
   # execute-database:
   #   needs: check-changed
   #   runs-on: ubuntu-latest
