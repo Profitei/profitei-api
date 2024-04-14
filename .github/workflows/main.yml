@@ -1,4 +1,4 @@
-name: Deploy dokku and database
+name: Push Docker and Execute Database
 
 on:
   workflow_dispatch:
@@ -23,33 +23,39 @@ jobs:
           files: |
             prisma/**
             .github/**
-  deploy-profitei-stage:
+  docker:
     runs-on: ubuntu-latest
     steps:
-      - name: Cloning repo
-        uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
         with:
-          fetch-depth: 0
-      - name: Push to dokku
-        uses: dokku/github-action@master
+          username: evmartinelli
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v5
         with:
-          branch: 'main'
-          git_remote_url: ssh://dokku@apps.profitei.net/profitei-api
-          ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_STAGING }}
-          git_push_flags: '--force'
-  execute-database:
-    needs: check-changed
-    runs-on: ubuntu-latest
-    env:
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
-    if: needs.check-changed.outputs.changed-files-database == 'true'
-    steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-      - name: Install Dependencies
-        run: npm ci
-      - name: Run production migration
-        run: npm run prisma:deploy
+          push: true
+          tags: |
+            evmartinelli/profitei:${{ github.sha }}
+            evmartinelli/profitei:latest
+
+  # execute-database:
+  #   needs: check-changed
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  #   if: needs.check-changed.outputs.changed-files-database == 'true'
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Use Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: '20.x'
+  #     - name: Install Dependencies
+  #       run: npm ci
+  #     - name: Run production migration
+  #       run: npm run prisma:deploy
