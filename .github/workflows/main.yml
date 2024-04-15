@@ -39,6 +39,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: |
             evmartinelli/profitei:${{ github.sha }}
             evmartinelli/profitei:latest
@@ -75,7 +76,7 @@ jobs:
       - name: Run database migration
         run: |
           kubectl run migration-db-job \
-          --env="DATABASE_URL=${{ secrets.DATABASE_URL }}" \
+          --env="DATABASE_URL=$DB_URL" \
           --rm --tty -i --restart='Never' \
           --namespace postgresql \
           --image=evmartinelli/profitei:latest \
