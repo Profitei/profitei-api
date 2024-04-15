@@ -3,13 +3,19 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - deployment.yaml
-  - ingress.yaml
-  - service.yaml
+- deployment.yaml
+- ingress.yaml
+- service.yaml
 
 namespace: profitei
 
 images:
-  - name: evmartinelli/profitei
-    newTag: latest
-    newName: evmartinelli/profitei
+- name: evmartinelli/profitei
+  newName: evmartinelli/profitei
+  newTag: latest
+- name: evmartinelli/profitei:latest
+  newName: evmartinelli/profitei
+  newTag: 8d334d1e01ecfb68dfbe8083b4a236102ae4dd68
+
+patchesStrategicMerge:
+- patch.yaml
