@@ -61,20 +61,22 @@ jobs:
           git config --global user.name "GH Actions"
           git commit -am "Set `profitei` image tag to `${GITHUB_SHA}`"
           git push
-          
-  # execute-database:
-  #   needs: check-changed
-  #   runs-on: ubuntu-latest
-  #   env:
-  #     DATABASE_URL: ${{ secrets.DATABASE_URL }}
-  #   if: needs.check-changed.outputs.changed-files-database == 'true'
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Use Node.js
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         node-version: '20.x'
-  #     - name: Install Dependencies
-  #       run: npm ci
-  #     - name: Run production migration
-  #       run: npm run prisma:deploy
+
+  execute-database:
+    needs: check-changed
+    runs-on: ubuntu-latest
+    if: needs.check-changed.outputs.changed-files-database == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Connect to Kubernetes cluster
+        uses: azure/k8s-set-context@v4
+        with:
+          kubeconfig: ${{ secrets.KUBECONFIG }}
+      - name: Run database migration
+        run: |
+          kubectl run migration-db-job \
+          --env="DATABASE_URL=${{ secrets.DATABASE_URL }}" \
+          --rm --tty -i --restart='Never' \
+          --namespace postgresql \
+          --image=evmartinelli/profitei:latest \
+          --command -- /bin/sh -c "npx prisma migrate deploy"
