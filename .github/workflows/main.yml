@@ -64,7 +64,7 @@ jobs:
           git push
 
   execute-database:
-    needs: check-changed
+    needs: [check-changed, docker]
     runs-on: ubuntu-latest
     if: needs.check-changed.outputs.changed-files-database == 'true'
     steps:
