@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: profitei-api
 spec:
+  replicas: 3
   selector:
     matchLabels:
       app: profitei-api
@@ -16,8 +17,14 @@ spec:
       - name: profitei-api
         image: evmartinelli/profitei
         resources:
+          requests:
+            cpu: "100m"
+            memory: "200Mi"
           limits:
-            memory: "128Mi"
+            memory: "500Mi"
             cpu: "500m"
+        envFrom:
+        - secretRef:
+            name: profitei-secrets
         ports:
         - containerPort: 3000
