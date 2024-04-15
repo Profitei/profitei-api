@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: profitei-api
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: profitei-api
@@ -18,7 +18,7 @@ spec:
         image: evmartinelli/profitei
         resources:
           requests:
-            cpu: "100m"
+            cpu: "250m"
             memory: "200Mi"
           limits:
             memory: "500Mi"
