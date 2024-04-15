@@ -17,9 +17,9 @@ spec:
               secretKeyRef:
                 name: db-url-secret
                 key: dburl
-      restartPolicy: Never
-      resources:
+        resources:
           limits:
-            memory: "128Mi"
             cpu: "500m"
+            memory: "128Mi"
+      restartPolicy: Never
   backoffLimit: 0
