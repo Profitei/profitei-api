@@ -1,0 +1,10 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: profitei-tls-ingress
+spec:
+  rules:
+  - host: stage.apps.profitei.net
+  tls:
+  - hosts:
+    - stage.apps.profitei.net
