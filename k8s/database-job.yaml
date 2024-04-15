@@ -9,7 +9,7 @@ spec:
       automountServiceAccountToken: false
       containers:
       - name: migration-db-job
-        image: evmartinelli/profitei:latest
+        image: evmartinelli/profitei-db:latest
         command: ["/bin/sh", "-c", "npx prisma migrate deploy"]
         env:
           - name: DATABASE_URL

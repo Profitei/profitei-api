@@ -4,6 +4,6 @@ WORKDIR /usr/src/app
 
 RUN npm install prisma --save-dev
 
-RUN npm run prisma:generate
+COPY ./prisma/ ./prisma/
 
 CMD [ "npx", "prisma", "migrate", "deploy"]

@@ -80,10 +80,11 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
+          file: ./Dockerfile.database
           platforms: linux/amd64,linux/arm64
           tags: |
-            evmartinelli/profitei:${{ github.sha }}
-            evmartinelli/profitei:latest
+            evmartinelli/profitei-db:${{ github.sha }}
+            evmartinelli/profitei-db:latest
   execute-database:
     needs: [check-changed, docker-database]
     runs-on: ubuntu-latest
