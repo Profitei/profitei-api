@@ -17,5 +17,10 @@ images:
   newName: evmartinelli/profitei
   newTag: 8d334d1e01ecfb68dfbe8083b4a236102ae4dd68
 
-patchesStrategicMerge:
-- patch.yaml
+secretGenerator:
+  - name: profitei-secrets
+    envs:
+    - .env
+
+patches:
+- path: patch.yaml
