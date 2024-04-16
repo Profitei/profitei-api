@@ -17,7 +17,7 @@ spec:
               service:
                 name: profitei-service
                 port:
-                  number: 5678
+                  number: 3000
   tls:
     - secretName: profitei-tls
       hosts:
