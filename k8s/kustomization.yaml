@@ -16,11 +16,3 @@ images:
 - name: evmartinelli/profitei:latest
   newName: evmartinelli/profitei
   newTag: 0e976aecf4c9561795a9c3f936ae4803783c4aa9
-
-# secretGenerator:
-#   - name: profitei-secrets
-#     envs:
-#     - .env
-
-patches:
-- path: patch.yaml
