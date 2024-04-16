@@ -7,4 +7,3 @@ spec:
     app: profitei-api
   ports:
   - port: 3000
-    targetPort: 80
