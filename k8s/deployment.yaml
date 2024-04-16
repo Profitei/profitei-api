@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: profitei-api
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: profitei-api
@@ -13,11 +13,10 @@ spec:
         app: profitei-api
     spec:
       strategy:
-          type: RollingUpdate
-          rollingUpdate:
-            maxSurge: 1
-            maxUnavailable: 0
-      replicas: 3
+        type: RollingUpdate
+        rollingUpdate:
+          maxSurge: 1
+          maxUnavailable: 0
       automountServiceAccountToken: false
       containers:
       - name: profitei-api
@@ -34,14 +33,6 @@ spec:
           - name: google-cloud-key
             mountPath: "/var/secrets/google"
             readOnly: true
-        resources:
-          requests:
-            memory: "64Mi"
-            cpu: "250m"
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
-            ephemeral-storage: "1Gi"
       volumes:
         - name: google-cloud-key
           secret:
