@@ -15,7 +15,7 @@ images:
   newTag: latest
 - name: evmartinelli/profitei:latest
   newName: evmartinelli/profitei
-  newTag: e9fbb6f4b9065390ccab218d6c8f88b0a28ddcae
+  newTag: ad9a59d443f05580b6f67e650770f962f209eba6
 
 # secretGenerator:
 #   - name: profitei-secrets
