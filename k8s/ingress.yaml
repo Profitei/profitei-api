@@ -8,7 +8,7 @@ metadata:
     traefik.ingress.kubernetes.io/router.middlewares: default-redirect-https@kubernetescrd
 spec:
   rules:
-    - host: stage.${DOMAIN}
+    - host: stage.apps.profitei.net
       http:
         paths:
           - path: /
@@ -21,4 +21,4 @@ spec:
   tls:
     - secretName: profitei-tls
       hosts:
-        - stage.${DOMAIN}
+        - stage.apps.profitei.net
