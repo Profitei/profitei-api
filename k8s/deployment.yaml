@@ -16,13 +16,6 @@ spec:
       containers:
       - name: profitei-api
         image: evmartinelli/profitei
-        resources:
-          requests:
-            cpu: "250m"
-            memory: "200Mi"
-          limits:
-            memory: "500Mi"
-            cpu: "500m"
         envFrom:
         - secretRef:
             name: profitei-secrets
