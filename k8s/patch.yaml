@@ -8,3 +8,4 @@ spec:
   tls:
   - hosts:
     - stage.apps.profitei.net
+    secretName: profitei-tls
