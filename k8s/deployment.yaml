@@ -18,6 +18,6 @@ spec:
         image: evmartinelli/profitei
         envFrom:
         - secretRef:
-            name: profitei-secrets
+            name: profitei-secrets-9b7mcd276k
         ports:
         - containerPort: 3000
