@@ -15,7 +15,7 @@ images:
   newTag: latest
 - name: evmartinelli/profitei:latest
   newName: evmartinelli/profitei
-  newTag: be570482d7988c4851f66ce8316bfd8f29a0e5ef
+  newTag: f6789757f82ed142bad470291d0b9fa8ac3be0b0
 
 patches:
 - path: patch.yaml
