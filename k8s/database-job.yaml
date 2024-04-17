@@ -4,6 +4,7 @@ metadata:
   name: migration-db-job
   namespace: postgresql
 spec:
+  ttlSecondsAfterFinished: 100
   template:
     spec:
       automountServiceAccountToken: false
