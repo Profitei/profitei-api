@@ -97,4 +97,5 @@ jobs:
           kubeconfig: ${{ secrets.KUBECONFIG }}
       - name: Run database migration
         run: |
+          kubectl delete job migration-db-job -n postgresql    
           kubectl apply -f k8s/database-job.yaml
