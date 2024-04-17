@@ -6,6 +6,8 @@ services:
       - '3000:3000'
     depends_on:
       - postgres
+    env_file:
+      - .env.local
   postgres:
     image: postgres:13.5
     restart: always

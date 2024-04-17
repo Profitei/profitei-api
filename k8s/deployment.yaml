@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: profitei-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: profitei-api
+  template:
+    metadata:
+      labels:
+        app: profitei-api
+    spec:
+      strategy:
+      automountServiceAccountToken: false
+      containers:
+      - name: profitei-api
+        image: evmartinelli/profitei
+        envFrom:
+        - secretRef:
+            name: profitei-secrets-ch656gh8tb
+        ports:
+        - containerPort: 3000
+        env:
+          - name: FIREBASE_ADMIN_SDK
+            value: "/var/secrets/google/key.json"
+        volumeMounts:
+          - name: google-cloud-key
+            mountPath: "/var/secrets/google"
+            readOnly: true
+        # resources:
+        #   requests:
+        #     memory: "64Mi"
+        #     cpu: "250m"
+        #   limits:
+        #     memory: "128Mi"
+        #     cpu: "500m"
+        #     ephemeral-storage: "1Gi"  # Limite de armazenamento
+      volumes:
+        - name: google-cloud-key
+          secret:
+            secretName: google-cloud-key

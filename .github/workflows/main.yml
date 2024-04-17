@@ -1,4 +1,4 @@
-name: Deploy dokku and database
+name: Push Docker and Execute Database
 
 on:
   workflow_dispatch:
@@ -23,33 +23,78 @@ jobs:
           files: |
             prisma/**
             .github/**
-  deploy-profitei-stage:
+  docker:
     runs-on: ubuntu-latest
     steps:
-      - name: Cloning repo
-        uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
         with:
-          fetch-depth: 0
-      - name: Push to dokku
-        uses: dokku/github-action@master
+          username: evmartinelli
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v5
         with:
-          branch: 'main'
-          git_remote_url: ssh://dokku@apps.profitei.net/profitei-api
-          ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_STAGING }}
-          git_push_flags: '--force'
-  execute-database:
-    needs: check-changed
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            evmartinelli/profitei:${{ github.sha }}
+            evmartinelli/profitei:latest
+  build:
+    name: Build
+    needs: docker
     runs-on: ubuntu-latest
-    env:
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: imranismail/setup-kustomize@v2
+      - name: update k8s
+        run: |
+          cd k8s
+          kustomize edit set image evmartinelli/profitei:latest=evmartinelli/profitei:${{ github.sha }}
+          cat kustomization.yaml
+      
+      - name: commit
+        run: |          
+          git config --global user.email "gh@action.com"
+          git config --global user.name "GH Actions"
+          git commit -am "Set `profitei` image tag to `${GITHUB_SHA}`"
+          git push
+  docker-database:
+    runs-on: ubuntu-latest
+    needs: check-changed
+    if: needs.check-changed.outputs.changed-files-database == 'true'
+    steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: evmartinelli
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          file: ./Dockerfile.database
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            evmartinelli/profitei-db:${{ github.sha }}
+            evmartinelli/profitei-db:latest
+  execute-database:
+    needs: [check-changed, docker-database]
+    runs-on: ubuntu-latest
     if: needs.check-changed.outputs.changed-files-database == 'true'
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js
-        uses: actions/setup-node@v4
+      - name: Connect to Kubernetes cluster
+        uses: azure/k8s-set-context@v4
         with:
-          node-version: '20.x'
-      - name: Install Dependencies
-        run: npm ci
-      - name: Run production migration
-        run: npm run prisma:deploy
+          kubeconfig: ${{ secrets.KUBECONFIG }}
+      - name: Run database migration
+        run: |
+          kubectl apply -f k8s/database-job.yaml

@@ -11,6 +11,7 @@ import { PropertiesService } from './properties.service';
 import { CreatePropertyDto } from './dto/create-property.dto';
 import { UpdatePropertyDto } from './dto/update-property.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { Public } from '../decorators/public.decorator';
 
 @Controller('properties')
 @ApiTags('properties')
@@ -22,6 +23,7 @@ export class PropertiesController {
     return this.propertiesService.create(createPropertyDto);
   }
 
+  @Public()
   @Get()
   findAll() {
     return this.propertiesService.findAll();

@@ -1,8 +1,6 @@
 import * as admin from 'firebase-admin';
 
-const serviceAccount = process.env.FIREBASE_ADMIN_SDK
-  ? JSON.parse(process.env.FIREBASE_ADMIN_SDK)
-  : undefined;
+const serviceAccount = process.env.FIREBASE_ADMIN_SDK;
 
 if (!serviceAccount) {
   throw new Error(
