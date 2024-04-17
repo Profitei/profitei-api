@@ -24,8 +24,6 @@ export class SecurityGuard implements CanActivate {
     }
 
     if (apiKey !== process.env.API_KEY) {
-      this.logger.log(apiKey);
-      this.logger.log(process.env.API_KEY);
       throw new UnauthorizedException('Invalid API key.');
     }
 
