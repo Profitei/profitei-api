@@ -29,6 +29,14 @@ spec:
           - name: google-cloud-key
             mountPath: "/var/secrets/google"
             readOnly: true
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+            ephemeral-storage: "1Gi"  # Limite de armazenamento
       volumes:
         - name: google-cloud-key
           secret:
