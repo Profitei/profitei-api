@@ -32,7 +32,11 @@ export class RaffleService {
   }
 
   findAllSummary() {
-    return this.prisma.raffle.findMany();
+    return this.prisma.raffle.findMany({
+      include: {
+        category: true,
+      },
+    });
   }
 
   findOne(id: number) {

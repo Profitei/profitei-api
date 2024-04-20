@@ -2,6 +2,7 @@ export class ResponseOrderDto {
   tickets: Tickets[];
   orderPrice: number;
   pixData: PixData;
+
   constructor(data: any) {
     this.tickets = data.tickets.map(
       (ticket: { id: any; Raffle: { name: any; price: any } }) => ({
@@ -19,6 +20,7 @@ export class ResponseOrderDto {
         data.paymentData.point_of_interaction.transaction_data.qr_code_base64,
     };
   }
+
   private calculateOrderPrice(tickets: Tickets[]): number {
     return tickets.reduce((total, ticket) => {
       return total + (ticket.Raffle.price ?? 0);

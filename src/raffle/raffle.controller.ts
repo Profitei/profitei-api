@@ -12,6 +12,7 @@ import { CreateRaffleDto } from './dto/create-raffle.dto';
 import { UpdateRaffleDto } from './dto/update-raffle.dto';
 import { ApiCreatedResponse, ApiTags, ApiSecurity } from '@nestjs/swagger';
 import { Public } from '../decorators/public.decorator';
+import { SummaryResponseDto } from './dto/summary-response.dto';
 
 @ApiSecurity('api-key')
 @ApiTags('raffle')
@@ -31,8 +32,9 @@ export class RaffleController {
   }
 
   @Get('summary')
-  summary() {
-    return this.raffleService.findAllSummary();
+  async summary() {
+    const response = await this.raffleService.findAllSummary();
+    return response.map((raffle) => new SummaryResponseDto(raffle));
   }
 
   @Get(':id')
