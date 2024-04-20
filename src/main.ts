@@ -18,7 +18,7 @@ async function bootstrap() {
       { type: 'http', scheme: 'bearer', bearerFormat: 'JWT', in: 'header' },
       'access-token',
     )
-    .addApiKey({ type: 'apiKey', name: 'api-key', in: 'header' }, 'api-key')
+    .addApiKey({ type: 'apiKey', name: 'x-api-key', in: 'header' }, 'x-api-key')
     .build(); // Build the document
 
   // Create a Swagger document using the application instance and the document configuration

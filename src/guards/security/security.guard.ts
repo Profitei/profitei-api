@@ -15,7 +15,7 @@ export class SecurityGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
 
-    const apiKey = request.headers['api-key'];
+    const apiKey = request.headers['x-api-key'];
 
     this.logger.log('Validating API key');
 

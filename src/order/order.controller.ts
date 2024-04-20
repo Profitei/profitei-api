@@ -13,7 +13,7 @@ import { UpdateOrderDto } from './dto/update-order.dto';
 import { ResponseOrderDto } from './dto/response-order.dto';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 
-@ApiSecurity('api-key')
+@ApiSecurity('x-api-key')
 @Controller('order')
 @ApiTags('order')
 export class OrderController {

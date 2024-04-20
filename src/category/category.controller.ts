@@ -11,8 +11,10 @@ import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { ApiCreatedResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { Public } from '../decorators/public.decorator';
 
-@ApiSecurity('api-key')
+@ApiSecurity('x-api-key')
+@Public()
 @ApiTags('category')
 @Controller('category')
 export class CategoryController {

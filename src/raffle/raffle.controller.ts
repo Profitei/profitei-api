@@ -14,7 +14,7 @@ import { ApiCreatedResponse, ApiTags, ApiSecurity } from '@nestjs/swagger';
 import { Public } from '../decorators/public.decorator';
 import { SummaryResponseDto } from './dto/summary-response.dto';
 
-@ApiSecurity('api-key')
+@ApiSecurity('x-api-key')
 @ApiTags('raffle')
 @Controller('raffle')
 @Public()

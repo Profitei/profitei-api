@@ -17,7 +17,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-@ApiSecurity('api-key')
+@ApiSecurity('x-api-key')
 @ApiTags('user')
 @Controller('user')
 export class UserController {
