@@ -25,11 +25,12 @@ model Raffle {
   status     Status       @default(AVAILABLE)
   created    DateTime     @default(now()) @map("created_at")
   modified   DateTime?    @updatedAt @map("updated_at")
+  isFeatured Boolean      @default(true)
 }
 
 model Ticket {
   id       Int       @id @default(autoincrement())
-  name     String    @unique
+  name     String
   winner   Boolean
   status   Status    @default(AVAILABLE)
   Raffle   Raffle    @relation(fields: [raffleId], references: [id])
