@@ -23,6 +23,10 @@ export class UserService {
     return this.prisma.user.update({ where: { id }, data: updateUserDto });
   }
 
+  findByEmail(email: string) {
+    return this.prisma.user.findFirst({ where: { email } });
+  }
+
   remove(id: number) {
     return this.prisma.user.delete({ where: { id } });
   }
