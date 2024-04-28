@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Request,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -20,8 +21,9 @@ export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @Post()
-  async create(@Body() createOrderDto: CreateOrderDto) {
-    const response = await this.orderService.create(createOrderDto);
+  async create(@Request() req, @Body() createOrderDto: CreateOrderDto) {
+    const user = req.user;
+    const response = await this.orderService.create(createOrderDto, user);
     return new ResponseOrderDto(response);
   }
 

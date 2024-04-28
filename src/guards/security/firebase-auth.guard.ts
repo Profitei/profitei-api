@@ -4,18 +4,22 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Observable } from 'rxjs';
-import firebase from '../../config/firebase.config';
+
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from '../../decorators/public.decorator';
+import { FirebaseService } from '../../firebase/firebase.service';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class FirebaseAuthGuard implements CanActivate {
-  constructor(private readonly reflector: Reflector) {}
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
-    const isPublic = this.reflector.getAllAndOverride(IS_PUBLIC_KEY, [
+  constructor(
+    private firebaseService: FirebaseService,
+    private userService: UserService,
+    private readonly reflector: Reflector,
+  ) {}
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
     ]);
@@ -31,12 +35,13 @@ export class FirebaseAuthGuard implements CanActivate {
       throw new UnauthorizedException('Invalid token');
     }
 
-    return firebase
-      .auth()
-      .verifyIdToken(token)
-      .then(() => true)
-      .catch(() => {
-        throw new UnauthorizedException('Invalid token');
-      });
+    try {
+      const decodedToken = await this.firebaseService.verifyIdToken(token);
+      const userDetails = await this.userService.findByEmail(
+        decodedToken.email,
+      );
+      request.user = userDetails;
+      return true;
+    } catch (error) {}
   }
 }

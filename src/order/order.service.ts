@@ -3,6 +3,7 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { MercadoPagoService } from './mercado-pago.service';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
 
 @Injectable()
 export class OrderService {
@@ -13,7 +14,7 @@ export class OrderService {
     private readonly mercadoPagoService: MercadoPagoService,
   ) {}
 
-  async create(createOrderDto: CreateOrderDto) {
+  async create(createOrderDto: CreateOrderDto, user: CreateUserDto) {
     this.logger.log('Creating a new order');
     const tickets = await this.prisma.ticket.findMany({
       where: {
@@ -21,6 +22,9 @@ export class OrderService {
           in: createOrderDto.ticketsId,
         },
         status: 'AVAILABLE',
+      },
+      include: {
+        Raffle: true,
       },
     });
 
@@ -30,15 +34,20 @@ export class OrderService {
     }
 
     let paymentResult: any;
+    const totalPrice = tickets.reduce(
+      (acc, ticket) => acc + ticket.Raffle.price,
+      0,
+    );
+    const description = tickets.map((ticket) => ticket.name).join(', ');
 
     try {
       paymentResult = await this.mercadoPagoService.createPayment({
-        transaction_amount: 10,
-        description: 'Rifa Teste',
+        transaction_amount: totalPrice,
+        description: description,
         payment_method_id: 'pix',
-        email: 'martinelli.evandro@gmail.com',
+        email: user.email,
         identificationType: 'CPF',
-        number: '38870305830',
+        number: user.cpf,
       });
       this.logger.log('Payment created successfully');
     } catch (error) {
