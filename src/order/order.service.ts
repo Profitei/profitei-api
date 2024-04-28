@@ -92,8 +92,8 @@ export class OrderService {
     return this.prisma.order.findMany();
   }
 
-  findOne(id: number) {
-    return this.prisma.order.findUnique({
+  async findOne(id: number) {
+    const order = await this.prisma.order.findUnique({
       where: {
         id,
       },
@@ -105,6 +105,12 @@ export class OrderService {
         },
       },
     });
+
+    return {
+      id: order.id,
+      tickets: order.items,
+      paymentData: order.details,
+    };
   }
 
   update(id: number, updateOrderDto: UpdateOrderDto) {
