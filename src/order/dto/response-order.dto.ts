@@ -1,17 +1,26 @@
 export class ResponseOrderDto {
   id: number;
+  status: string;
+  created: Date;
   tickets: Tickets[];
   orderPrice: number;
   pixData: PixData;
 
   constructor(data: any) {
     this.id = data.id;
+    this.status = data.status;
+    this.created = data.created;
     this.tickets = data.tickets.map(
-      (ticket: { id: any; Raffle: { name: any; price: any } }) => ({
+      (ticket: {
+        id: number;
+        name: string;
+        Raffle: { name: any; price: any };
+      }) => ({
         id: ticket.id,
-        name: ticket.Raffle.name,
+        name: ticket.name,
         Raffle: {
           price: ticket.Raffle.price,
+          name: ticket.Raffle.name,
         },
       }),
     );
@@ -38,6 +47,7 @@ export class Tickets {
 
 export class Raffle {
   price: number;
+  name: string;
 }
 export class PixData {
   qrCode: string;

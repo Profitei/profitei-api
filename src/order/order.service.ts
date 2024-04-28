@@ -83,6 +83,8 @@ export class OrderService {
 
     return {
       id: order.id,
+      status: order.status,
+      created: order.created,
       tickets: order.items,
       paymentData: order.details,
     };
@@ -108,6 +110,8 @@ export class OrderService {
 
     return {
       id: order.id,
+      status: order.status,
+      created: order.created,
       tickets: order.items,
       paymentData: order.details,
     };
