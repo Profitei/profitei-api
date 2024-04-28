@@ -7,11 +7,11 @@ export class ResponseOrderDto {
   constructor(data: any) {
     this.id = data.id;
     this.tickets = data.tickets.map(
-      (ticket: { id: any; Raffle: { name: any; price: any } }) => ({
+      (ticket: { id: any; raffle: { name: any; price: any } }) => ({
         id: ticket.id,
-        name: ticket.Raffle.name,
+        name: ticket.raffle.name,
         Raffle: {
-          price: ticket.Raffle.price,
+          price: ticket.raffle.price,
         },
       }),
     );
@@ -25,7 +25,7 @@ export class ResponseOrderDto {
 
   private calculateOrderPrice(tickets: Tickets[]): number {
     return tickets.reduce((total, ticket) => {
-      return total + (ticket.Raffle.price ?? 0);
+      return total + (ticket.raffle.price ?? 0);
     }, 0);
   }
 }
@@ -33,7 +33,7 @@ export class ResponseOrderDto {
 export class Tickets {
   id: number;
   name: string;
-  Raffle: Raffle;
+  raffle: Raffle;
 }
 
 export class Raffle {

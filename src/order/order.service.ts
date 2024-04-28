@@ -98,7 +98,11 @@ export class OrderService {
         id,
       },
       include: {
-        items: true,
+        items: {
+          include: {
+            Raffle: true,
+          },
+        },
       },
     });
   }
