@@ -18,7 +18,7 @@ export class ResponseOrderDto {
       }) => ({
         id: ticket.id,
         name: ticket.name,
-        Raffle: {
+        raffle: {
           price: ticket.Raffle.price,
           name: ticket.Raffle.name,
         },
