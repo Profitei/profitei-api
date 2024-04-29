@@ -31,9 +31,11 @@ export class MercadoPagoService {
         },
         requestOptions: { idempotencyKey: '<SOME_UNIQUE_VALUE>' },
       };
+
       this.logger.log('Creating payment');
       const result = await this.paymentClient.create(paymentData);
       this.logger.log('Payment created successfully');
+
       return result;
     } catch (error) {
       this.logger.error('Failed to create payment', error.stack);
