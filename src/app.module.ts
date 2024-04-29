@@ -9,8 +9,8 @@ import { TicketModule } from './ticket/ticket.module';
 import { PropertiesModule } from './properties/properties.module';
 import { OrderModule } from './order/order.module';
 import { FirebaseAuthGuard } from './guards/security/firebase-auth.guard';
-import { FirebaseModule } from './firebase/firebase.config';
 import { SecurityGuard } from './guards/security/security.guard';
+import { FirebaseModule } from './firebase/firebase.module';
 
 @Module({
   imports: [
