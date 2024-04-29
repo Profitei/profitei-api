@@ -1,9 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { MercadoPagoService } from './mercado-pago.service';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class OrderService {
@@ -14,7 +15,13 @@ export class OrderService {
     private readonly mercadoPagoService: MercadoPagoService,
   ) {}
 
-  async create(createOrderDto: CreateOrderDto, user: CreateUserDto) {
+  @Cron(CronExpression.EVERY_MINUTE)
+  async handleCron() {
+    this.logger.debug('Running Cron Job - Cancel Pending Orders');
+    await this.cancelPendingOrders();
+  }
+
+  async create(createOrderDto: CreateOrderDto, user: User) {
     this.logger.log('Creating a new order');
     const tickets = await this.prisma.ticket.findMany({
       where: {
@@ -38,7 +45,12 @@ export class OrderService {
       (acc, ticket) => acc + ticket.Raffle.price,
       0,
     );
-    const description = tickets.map((ticket) => ticket.name).join(', ');
+
+    const uniqueNames = Array.from(
+      new Set(tickets.map((ticket) => ticket.Raffle.name)),
+    );
+    const description =
+      uniqueNames + ' ' + tickets.map((ticket) => ticket.name).join(', ');
 
     try {
       paymentResult = await this.mercadoPagoService.createPayment({
@@ -64,7 +76,7 @@ export class OrderService {
         },
         data: {
           status: 'UNAVAILABLE',
-          userId: 1,
+          userId: user.id,
         },
       });
       const createdOrder = await tx.order.create({
@@ -99,8 +111,24 @@ export class OrderService {
     };
   }
 
-  findAll() {
-    return this.prisma.order.findMany();
+  async findAll() {
+    const response = await this.prisma.order.findMany({
+      include: {
+        items: {
+          include: {
+            Raffle: true,
+          },
+        },
+      },
+    });
+
+    return response.map((order) => ({
+      id: order.id,
+      status: order.status,
+      created: order.created,
+      tickets: order.items,
+      paymentData: order.details,
+    }));
   }
 
   async findOne(id: number) {
@@ -133,5 +161,44 @@ export class OrderService {
 
   remove(id: number) {
     return `This action removes a #${id} order`;
+  }
+
+  async cancelPendingOrders(): Promise<void> {
+    this.logger.log('Cancelling pending orders');
+    const pendingOrders = await this.prisma.order.findMany({
+      where: {
+        status: 'PENDING',
+      },
+      include: {
+        items: true,
+      },
+    });
+
+    this.logger.log(`Found ${pendingOrders.length} pending orders`);
+    for (const order of pendingOrders) {
+      await this.prisma.$transaction(async (tx) => {
+        await tx.order.update({
+          where: {
+            id: order.id,
+          },
+          data: {
+            status: 'CANCELED',
+          },
+        });
+
+        await tx.ticket.updateMany({
+          where: {
+            id: {
+              in: order.items.map((item) => item.id),
+            },
+          },
+          data: {
+            status: 'AVAILABLE',
+            userId: null,
+          },
+        });
+      });
+      this.logger.log(`Order ${order.id} cancelled`);
+    }
   }
 }

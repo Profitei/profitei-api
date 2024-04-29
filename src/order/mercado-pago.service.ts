@@ -29,7 +29,7 @@ export class MercadoPagoService {
             },
           },
         },
-        requestOptions: { idempotencyKey: '<SOME_UNIQUE_VALUE>' },
+        requestOptions: { idempotencyKey: '33211122312' },
       };
 
       this.logger.log('Creating payment');

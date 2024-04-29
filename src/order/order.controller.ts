@@ -28,8 +28,9 @@ export class OrderController {
   }
 
   @Get()
-  findAll() {
-    return this.orderService.findAll();
+  async findAll() {
+    const responses = await this.orderService.findAll();
+    return responses.map((response) => new ResponseOrderDto(response));
   }
 
   @Get(':id')
