@@ -174,6 +174,7 @@ export class OrderService {
       },
     });
 
+    this.logger.log(`Found ${pendingOrders.length} pending orders`);
     for (const order of pendingOrders) {
       await this.prisma.$transaction(async (tx) => {
         await tx.order.update({
