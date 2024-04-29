@@ -9,16 +9,11 @@ resources:
 
 namespace: profitei
 
+
 images:
 - name: evmartinelli/profitei
   newName: evmartinelli/profitei
   newTag: latest
 - name: evmartinelli/profitei:latest
   newName: evmartinelli/profitei
-
-  newTag: f934ff590e35aab8934805c43ff1719401569986
-
-# secretGenerator:
-# - name: profitei-secrets
-#   envs:
-#   - .env
+  newTag: 2396f4ed81aff25de363cc4c4dca919087c0ddf4
