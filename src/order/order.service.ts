@@ -15,7 +15,7 @@ export class OrderService {
     private readonly mercadoPagoService: MercadoPagoService,
   ) {}
 
-  @Cron(CronExpression.EVERY_MINUTE)
+  @Cron(CronExpression.EVERY_WEEKDAY)
   async handleCron() {
     this.logger.debug('Running Cron Job - Cancel Pending Orders');
     await this.cancelPendingOrders();
