@@ -1,9 +1,10 @@
 // mercadopago.service.ts
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { MercadoPagoConfig, Payment } from 'mercadopago';
 
 @Injectable()
 export class MercadoPagoService {
+  private readonly logger = new Logger(MercadoPagoService.name);
   private paymentClient: Payment;
 
   constructor() {
@@ -30,11 +31,13 @@ export class MercadoPagoService {
         },
         requestOptions: { idempotencyKey: '<SOME_UNIQUE_VALUE>' },
       };
-
+      this.logger.log('Creating payment');
       const result = await this.paymentClient.create(paymentData);
+      this.logger.log('Payment created successfully');
       return result;
     } catch (error) {
-      throw new Error(`Payment creation failed: ${error.message}`);
+      this.logger.error('Failed to create payment', error.stack);
+      throw new Error('Payment creation failed');
     }
   }
 }
