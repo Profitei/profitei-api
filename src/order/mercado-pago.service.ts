@@ -29,7 +29,7 @@ export class MercadoPagoService {
             },
           },
         },
-        requestOptions: { idempotencyKey: '33211122312' },
+        requestOptions: { idempotencyKey: '123' },
       };
 
       this.logger.log('Creating payment');
@@ -38,7 +38,7 @@ export class MercadoPagoService {
 
       return result;
     } catch (error) {
-      this.logger.error('Failed to create payment', error.stack);
+      this.logger.error('Failed to create payment', error);
       throw new Error('Payment creation failed');
     }
   }
