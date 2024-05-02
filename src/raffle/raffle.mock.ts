@@ -56,6 +56,7 @@ export const mockExpectedCreateRaffle = () => ({
   id: 1,
   created: new Date(),
   modified: new Date(),
+  isFeatured: true,
 });
 
 export const mockExpectedFindAllRaffle = () => [
@@ -103,6 +104,7 @@ export const mockExpectedFindAllRaffle = () => [
     id: 1,
     created: new Date(),
     modified: new Date(),
+    isFeatured: true,
   },
 ];
 
