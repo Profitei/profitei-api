@@ -4,7 +4,9 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { MercadoPagoService } from './mercado-pago.service';
-import { User } from 'src/user/entities/user.entity';
+import { User } from '../user/entities/user.entity';
+import { OrderStatus } from '../enums/order-status.dto';
+import { Order, Ticket } from '@prisma/client';
 
 @Injectable()
 export class OrderService {
@@ -102,13 +104,7 @@ export class OrderService {
       });
     });
 
-    return {
-      id: order.id,
-      status: order.status,
-      created: order.created,
-      tickets: order.items,
-      paymentData: order.details,
-    };
+    return this.mapOrderDetails(order);
   }
 
   async findAll() {
@@ -122,13 +118,7 @@ export class OrderService {
       },
     });
 
-    return response.map((order) => ({
-      id: order.id,
-      status: order.status,
-      created: order.created,
-      tickets: order.items,
-      paymentData: order.details,
-    }));
+    return response.map(this.mapOrderDetails);
   }
 
   async findOne(id: number) {
@@ -145,13 +135,7 @@ export class OrderService {
       },
     });
 
-    return {
-      id: order.id,
-      status: order.status,
-      created: order.created,
-      tickets: order.items,
-      paymentData: order.details,
-    };
+    return this.mapOrderDetails(order);
   }
 
   update(id: number, updateOrderDto: UpdateOrderDto) {
@@ -161,6 +145,54 @@ export class OrderService {
 
   remove(id: number) {
     return `This action removes a #${id} order`;
+  }
+
+  async findAllOrdersByStatusAndUser(
+    orderStatus?: OrderStatus,
+    userId?: number,
+  ) {
+    const validateOrderStatus = orderStatus ? OrderStatus.PENDING : undefined;
+
+    if (!userId) {
+      this.logger.log(`Start find all ${validateOrderStatus} orders`);
+    } else {
+      this.logger.log(
+        `Start find all ${validateOrderStatus} orders with user. ID: ${userId}`,
+      );
+    }
+
+    const response = await this.prisma.order.findMany({
+      where: {
+        status: validateOrderStatus,
+        items: {
+          some: {
+            userId: userId,
+          },
+        },
+      },
+      include: {
+        items: {
+          include: {
+            Raffle: true,
+          },
+        },
+      },
+    });
+
+    this.logger.log(
+      `Successfully started finding all ${validateOrderStatus} orders`,
+    );
+    return response.map(this.mapOrderDetails);
+  }
+
+  private mapOrderDetails(order: Order & { items: Ticket[] }) {
+    return {
+      id: order.id,
+      status: order.status,
+      created: order.created,
+      tickets: order.items,
+      paymentData: order.details,
+    };
   }
 
   async cancelPendingOrders(): Promise<void> {
