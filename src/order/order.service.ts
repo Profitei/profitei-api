@@ -7,6 +7,11 @@ import { MercadoPagoService } from './mercado-pago.service';
 import { User } from 'src/user/entities/user.entity';
 import { Order } from './entities/order.entity';
 import { Ticket } from 'src/ticket/entities/ticket.entity';
+import {
+  OrderStatus,
+  Order as OrderPrisma,
+  Ticket as TicketPrisma,
+} from '@prisma/client';
 
 @Injectable()
 export class OrderService {
@@ -116,7 +121,7 @@ export class OrderService {
     const orders = await this.prisma.order.findMany({
       include: { items: { include: { Raffle: true } } },
     });
-    return orders.map((order) => this.mapOrderToDto(order));
+    return orders.map(this.mapOrderToDto);
   }
 
   async findOne(id: number): Promise<Order> {
@@ -128,6 +133,43 @@ export class OrderService {
       throw new Error('Order not found');
     }
     return this.mapOrderToDto(order);
+  }
+
+  async findAllOrdersByStatusAndUser(
+    orderStatus?: OrderStatus,
+    userId?: number,
+  ) {
+    const validateOrderStatus = orderStatus ? OrderStatus.PENDING : undefined;
+
+    if (!userId) {
+      this.logger.log(`Start find all ${validateOrderStatus} orders`);
+    } else {
+      this.logger.log(
+        `Start find all ${validateOrderStatus} orders with user. ID: ${userId}`,
+      );
+    }
+
+    const response = await this.prisma.order.findMany({
+      where: {
+        status: validateOrderStatus,
+        items: {
+          some: {
+            userId: Number(userId),
+          },
+        },
+      },
+      include: {
+        items: {
+          include: {
+            Raffle: true,
+          },
+        },
+      },
+    });
+    this.logger.log(
+      `Successfully started finding all ${validateOrderStatus} orders`,
+    );
+    return response.map(this.mapOrderToDto);
   }
 
   update(id: number, updateOrderDto: UpdateOrderDto): string {
@@ -172,7 +214,7 @@ export class OrderService {
     this.logger.log(`Order ${order.id} cancelled`);
   }
 
-  private mapOrderToDto(order: any): Order {
+  private mapOrderToDto(order: OrderPrisma & { items: TicketPrisma[] }): Order {
     return {
       id: order.id,
       status: order.status,
@@ -180,5 +222,16 @@ export class OrderService {
       tickets: order.items,
       paymentData: order.details,
     };
+  }
+
+  private validaterUserIdIsNumber(userId: number): number {
+    if (userId && typeof userId === 'number') {
+      return userId;
+    }
+    const parsedUserId = Number(userId);
+    if (isNaN(parsedUserId)) {
+      throw new Error('Invalid userId');
+    }
+    return parsedUserId;
   }
 }
