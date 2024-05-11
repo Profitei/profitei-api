@@ -51,7 +51,7 @@ export class OrderController {
     return this.orderService.remove(+id);
   }
 
-  @Get('findByStatusAndUser')
+  @Get()
   async findByStatusAndUser(
     @Query('orderStatus') orderStatus?: OrderStatus,
     @Query('userId') userId?: number,
