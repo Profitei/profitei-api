@@ -13,8 +13,9 @@ import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { ResponseOrderDto } from './dto/response-order.dto';
-import { ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { OrderStatus } from '../enums/order-status.dto';
+import { Public } from '../decorators/public.decorator';
 
 @ApiSecurity('x-api-key')
 @Controller('order')
@@ -28,9 +29,17 @@ export class OrderController {
     const response = await this.orderService.create(createOrderDto, user);
     return new ResponseOrderDto(response);
   }
-
+  @Public()
+  @ApiQuery({ name: 'orderStatus', required: false, type: 'number' })
+  @ApiQuery({ name: 'userId', required: false, type: 'number' })
   @Get()
-  async findAll() {
+  async findAll(
+    @Query('orderStatus') orderStatus?: OrderStatus,
+    @Query('userId') userId?: number,
+  ) {
+    if (orderStatus || userId) {
+      return this.findOrdersByStatusAndUser(orderStatus, userId);
+    }
     const responses = await this.orderService.findAll();
     return responses.map((response) => new ResponseOrderDto(response));
   }
@@ -51,10 +60,9 @@ export class OrderController {
     return this.orderService.remove(+id);
   }
 
-  @Get()
-  async findByStatusAndUser(
-    @Query('orderStatus') orderStatus?: OrderStatus,
-    @Query('userId') userId?: number,
+  private async findOrdersByStatusAndUser(
+    orderStatus?: OrderStatus,
+    userId?: number,
   ) {
     const responses = await this.orderService.findAllOrdersByStatusAndUser(
       orderStatus,
