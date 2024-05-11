@@ -7,12 +7,14 @@ import {
   Param,
   Delete,
   Request,
+  Query,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { ResponseOrderDto } from './dto/response-order.dto';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { OrderStatus } from '../enums/order-status.dto';
 
 @ApiSecurity('x-api-key')
 @Controller('order')
@@ -47,5 +49,17 @@ export class OrderController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.orderService.remove(+id);
+  }
+
+  @Get('findByStatusAndUser')
+  async findByStatusAndUser(
+    @Query('orderStatus') orderStatus?: OrderStatus,
+    @Query('userId') userId?: number,
+  ) {
+    const responses = await this.orderService.findAllOrdersByStatusAndUser(
+      orderStatus,
+      userId,
+    );
+    return responses.map((response) => new ResponseOrderDto(response));
   }
 }

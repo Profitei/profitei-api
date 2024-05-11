@@ -47,7 +47,7 @@ describe('OrderService', () => {
         .spyOn(prismaService.order, 'findMany')
         .mockResolvedValue(expectedOrders);
 
-      const orders = await service.findAllPendingOrders();
+      const orders = await service.findAllOrdersByStatusAndUser();
       expect(orders).toEqual([
         {
           created: new Date('2022-01-01T00:00:00Z'),
@@ -93,7 +93,7 @@ describe('OrderService', () => {
         .spyOn(prismaService.order, 'findMany')
         .mockResolvedValue(expectedOrders);
 
-      const orders = await service.findAllPendingOrders(
+      const orders = await service.findAllOrdersByStatusAndUser(
         OrderStatus.PENDING,
         userId,
       );
