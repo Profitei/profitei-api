@@ -12,6 +12,7 @@ import { FirebaseAuthGuard } from './guards/security/firebase-auth.guard';
 import { SecurityGuard } from './guards/security/security.guard';
 import { FirebaseModule } from './firebase/firebase.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     PropertiesModule,
     OrderModule,
     FirebaseModule,
+    HealthModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env', '.env.local'],

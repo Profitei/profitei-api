@@ -6,6 +6,7 @@ resources:
 - deployment.yaml
 - ingress.yaml
 - service.yaml
+- hpa.yaml
 
 namespace: profitei
 

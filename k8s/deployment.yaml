@@ -3,7 +3,6 @@ kind: Deployment
 metadata:
   name: profitei-api
 spec:
-  replicas: 3
   selector:
     matchLabels:
       app: profitei-api
@@ -16,12 +15,44 @@ spec:
       automountServiceAccountToken: false
       containers:
       - name: profitei-api
+        imagepullPolicy: IfNotPresent
         image: evmartinelli/profitei
         envFrom:
         - secretRef:
             name: profitei-secrets-m2dbm22549
         ports:
         - containerPort: 3000
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256mi"
+            cpu: "200m"
+        livenessProbe:
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 4
+          successThreshold: 1
+          failureThreshold: 2
+          httpGet:
+            port: tcp
+            path: /health
+            httpHeaders:
+            - name: x-api-key
+              value: 402c2470-cf86-46ad-bb95-ab4025e0fba2
+        readinessProbe:
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 4
+          successThreshold: 1
+          failureThreshold: 2
+          httpGet:
+            port: tcp
+            path: /health
+            httpHeaders:
+            - name: x-api-key
+              value: 402c2470-cf86-46ad-bb95-ab4025e0fba2
         env:
           - name: FIREBASE_ADMIN_SDK
             value: "/var/secrets/google/key.json"
