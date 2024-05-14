@@ -42,11 +42,11 @@ spec:
             path: /health
             httpHeaders:
             - name: x-api-key
-              value: 402c2470-cf86-46ad-bb95-ab4025e0fba2
+              value: "402c2470-cf86-46ad-bb95-ab4025e0fba2"
         readinessProbe:
-          initialDelaySeconds: 10
+          initialDelaySeconds: 30
           periodSeconds: 10
-          timeoutSeconds: 4
+          timeoutSeconds: 10
           successThreshold: 1
           failureThreshold: 2
           httpGet:
