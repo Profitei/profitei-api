@@ -6,7 +6,7 @@ import { FirebaseAuthGuard } from './guards/security/firebase-auth.guard'; // De
 async function bootstrap() {
   // Create a NestJS application instance by passing the AppModule to the NestFactory
   const app = await NestFactory.create(AppModule, {
-    logger: ['error', 'warn', 'log', 'debug', 'verbose'],
+    logger: ['error'],
   });
 
   // Use DocumentBuilder to create a new Swagger document configuration
