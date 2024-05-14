@@ -32,9 +32,9 @@ spec:
             cpu: "200m"
             ephemeral-storage: "1Gi"
         livenessProbe:
-          initialDelaySeconds: 10
+          initialDelaySeconds: 30
           periodSeconds: 10
-          timeoutSeconds: 4
+          timeoutSeconds: 10
           successThreshold: 1
           failureThreshold: 2
           httpGet:
@@ -54,7 +54,7 @@ spec:
             path: /health
             httpHeaders:
             - name: x-api-key
-              value: 402c2470-cf86-46ad-bb95-ab4025e0fba2
+              value: "402c2470-cf86-46ad-bb95-ab4025e0fba2"
         env:
           - name: FIREBASE_ADMIN_SDK
             value: "/var/secrets/google/key.json"
