@@ -17,10 +17,7 @@ spec:
       containers:
       - name: profitei-api
         image: evmartinelli/profitei
-        imagePullPolicy: IfNotPresent
-        envFrom:
-        - secretRef:
-            name: profitei-secrets-m2dbm22549
+        imagePullPolicy: IfNotPresent        
         ports:
         - containerPort: 3000
         resources:
@@ -55,14 +52,12 @@ spec:
             httpHeaders:
             - name: x-api-key
               value: "402c2470-cf86-46ad-bb95-ab4025e0fba2"
+        envFrom:
+        - secretRef:
+            name: profitei-secrets
         env:
           - name: FIREBASE_ADMIN_SDK
-            value: "/var/secrets/google/key.json"
-          - name: DATABASE_URL
-            valueFrom:
-              secretKeyRef:
-                name: db-url-secret
-                key: dburl
+            value: "/var/secrets/google/profitei-firebase-adminsdk-ikxkn-c7414886c1.json"
         volumeMounts:
           - name: google-cloud-key
             mountPath: "/var/secrets/google"
@@ -70,4 +65,7 @@ spec:
       volumes:
         - name: google-cloud-key
           secret:
-            secretName: google-cloud-key
+            secretName: profitei-secrets
+            items:
+              - key: FIREBASE_ADMIN_SDK
+                path: profitei-firebase-adminsdk-ikxkn-c7414886c1.json

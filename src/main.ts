@@ -2,11 +2,17 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { SecurityGuard } from './guards/security/security.guard';
-import { FirebaseAuthGuard } from './guards/security/firebase-auth.guard'; // Define the bootstrap function
+import { FirebaseAuthGuard } from './guards/security/firebase-auth.guard';
+import { LogLevel } from '@nestjs/common';
+
 async function bootstrap() {
-  // Create a NestJS application instance by passing the AppModule to the NestFactory
+  const logLevel: LogLevel[] =
+    process.env.ENV === 'dev'
+      ? ['error', 'warn', 'log', 'debug', 'verbose']
+      : ['error', 'warn', 'fatal'];
+
   const app = await NestFactory.create(AppModule, {
-    logger: ['error'],
+    logger: logLevel,
   });
 
   // Use DocumentBuilder to create a new Swagger document configuration

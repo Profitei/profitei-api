@@ -25,7 +25,7 @@ export class HealthController {
   @HealthCheck()
   async check() {
     return this.health.check([
-      async () => this.http.pingCheck('nestjs-docs', 'https://docs.nestjs.com'),
+      async () => this.http.pingCheck('api', 'http://localhost:3000/health'),
       async () =>
         this.disk.checkStorage('diskStorage', {
           thresholdPercent: 0.9,
