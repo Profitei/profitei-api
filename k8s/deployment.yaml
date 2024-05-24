@@ -54,7 +54,7 @@ spec:
               value: "402c2470-cf86-46ad-bb95-ab4025e0fba2"
         envFrom:
         - secretRef:
-            name: profitei-secrets
+            name: profitei-secrets-88m574bfm6
         env:
           - name: FIREBASE_ADMIN_SDK
             value: "/var/secrets/google/profitei-firebase-adminsdk-ikxkn-c7414886c1.json"
@@ -65,7 +65,7 @@ spec:
       volumes:
         - name: google-cloud-key
           secret:
-            secretName: profitei-secrets
+            secretName: profitei-secrets-88m574bfm6
             items:
               - key: FIREBASE_ADMIN_SDK
                 path: profitei-firebase-adminsdk-ikxkn-c7414886c1.json
