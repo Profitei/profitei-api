@@ -28,30 +28,30 @@ spec:
             memory: "256Mi" 
             cpu: "200m"
             ephemeral-storage: "1Gi"
-        livenessProbe:
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 10
-          successThreshold: 1
-          failureThreshold: 2
-          httpGet:
-            port: 3000
-            path: /health
-            httpHeaders:
-            - name: x-api-key
-              value: "402c2470-cf86-46ad-bb95-ab4025e0fba2"
-        readinessProbe:
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 10
-          successThreshold: 1
-          failureThreshold: 2
-          httpGet:
-            port: 3000
-            path: /health
-            httpHeaders:
-            - name: x-api-key
-              value: "402c2470-cf86-46ad-bb95-ab4025e0fba2"
+        # livenessProbe:
+        #   initialDelaySeconds: 30
+        #   periodSeconds: 10
+        #   timeoutSeconds: 10
+        #   successThreshold: 1
+        #   failureThreshold: 2
+        #   httpGet:
+        #     port: 3000
+        #     path: /health
+        #     httpHeaders:
+        #     - name: x-api-key
+        #       value: "402c2470-cf86-46ad-bb95-ab4025e0fba2"
+        # readinessProbe:
+        #   initialDelaySeconds: 30
+        #   periodSeconds: 10
+        #   timeoutSeconds: 10
+        #   successThreshold: 1
+        #   failureThreshold: 2
+        #   httpGet:
+        #     port: 3000
+        #     path: /health
+        #     httpHeaders:
+        #     - name: x-api-key
+        #       value: "402c2470-cf86-46ad-bb95-ab4025e0fba2"
         envFrom:
         - secretRef:
             name: profitei-secrets-88m574bfm6
