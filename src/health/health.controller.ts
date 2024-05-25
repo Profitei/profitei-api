@@ -7,10 +7,11 @@ import {
   MemoryHealthIndicator,
 } from '@nestjs/terminus';
 import { PrismaOrmHealthIndicator } from './prismaorm.health';
-import { Public } from '../decorators/public.decorator';
+import { Public, NoAuth } from '../decorators/public.decorator';
 
 @Controller('health')
 @Public()
+@NoAuth()
 export class HealthController {
   constructor(
     private health: HealthCheckService,
