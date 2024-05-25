@@ -8,8 +8,8 @@ import { LogLevel } from '@nestjs/common';
 async function bootstrap() {
   const logLevel: LogLevel[] =
     process.env.ENV === 'dev'
-      ? ['error', 'warn', 'log', 'debug', 'verbose']
-      : ['error', 'warn', 'fatal'];
+      ? ['error', 'warn', 'log', 'fatal', 'debug', 'verbose']
+      : ['error', 'warn', 'log', 'fatal'];
 
   const app = await NestFactory.create(AppModule, {
     logger: logLevel,
@@ -35,7 +35,8 @@ async function bootstrap() {
 
   // Apply Global Guard to use API-KEY and FirebaseAuthGuard
   const firebaseAuthGuard = app.get(FirebaseAuthGuard);
-  app.useGlobalGuards(new SecurityGuard(), firebaseAuthGuard);
+  const securityGuard = app.get(SecurityGuard);
+  app.useGlobalGuards(securityGuard, firebaseAuthGuard);
 
   // Start the application and listen for requests on port 3000
   await app.listen(3000);

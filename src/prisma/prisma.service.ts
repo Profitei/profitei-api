@@ -10,7 +10,7 @@ export class PrismaService extends PrismaClient<
   constructor() {
     super({ log: [{ level: 'query', emit: 'event' }] });
     this.$on('query', (e) => {
-      this.logger.log(
+      this.logger.debug(
         `Query: ${e.query} Params: ${e.params} Duration: ${e.duration}ms`,
       );
     });
