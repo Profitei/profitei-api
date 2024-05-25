@@ -7,7 +7,7 @@ import {
   MemoryHealthIndicator,
 } from '@nestjs/terminus';
 import { PrismaOrmHealthIndicator } from './prismaorm.health';
-import { Public } from 'src/decorators/public.decorator';
+import { Public } from '../decorators/public.decorator';
 
 @Controller('health')
 @Public()
@@ -25,7 +25,7 @@ export class HealthController {
   @HealthCheck()
   async check() {
     return this.health.check([
-      async () => this.http.pingCheck('api', 'http://localhost:3000/api'),
+      async () => this.http.pingCheck('api', 'http://localhost:3000/health'),
       async () =>
         this.disk.checkStorage('diskStorage', {
           thresholdPercent: 0.9,
@@ -34,9 +34,6 @@ export class HealthController {
       async () => this.db.pingCheck('healthcheckdemo'),
       async () => this.memory.checkHeap('memory_heap', 300 * 1024 * 1024),
       async () => this.memory.checkRSS('memory_rss', 300 * 1024 * 1024),
-
-      // Mongoose for MongoDB check
-      // Redis check
     ]);
   }
 }
