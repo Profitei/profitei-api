@@ -36,6 +36,7 @@ async function bootstrap() {
   // Apply Global Guard to use API-KEY and FirebaseAuthGuard
   const firebaseAuthGuard = app.get(FirebaseAuthGuard);
   const securityGuard = app.get(SecurityGuard);
+
   app.useGlobalGuards(securityGuard, firebaseAuthGuard);
 
   // Start the application and listen for requests on port 3000

@@ -26,7 +26,7 @@ export class HealthController {
   @HealthCheck()
   async check() {
     return this.health.check([
-      async () => this.http.pingCheck('api', 'http://localhost:3000/health'),
+      async () => this.http.pingCheck('api', 'http://localhost:3000/api'),
       async () =>
         this.disk.checkStorage('diskStorage', {
           thresholdPercent: 0.9,

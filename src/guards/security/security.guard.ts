@@ -11,7 +11,7 @@ import { NO_AUTH } from '../../decorators/public.decorator';
 
 @Injectable()
 export class SecurityGuard implements CanActivate {
-  constructor(private readonly reflector: Reflector) {}
+  constructor(private reflector: Reflector) {}
 
   private readonly logger = new Logger(SecurityGuard.name);
   canActivate(
