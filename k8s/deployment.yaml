@@ -28,24 +28,24 @@ spec:
             memory: "256Mi" 
             cpu: "200m"
             ephemeral-storage: "1Gi"
-        livenessProbe:
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 10
-          successThreshold: 1
-          failureThreshold: 2
-          httpGet:
-            port: 3000
-            path: /health
-        readinessProbe:
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 10
-          successThreshold: 1
-          failureThreshold: 2
-          httpGet:
-            port: 3000
-            path: /health
+        # livenessProbe:
+        #   initialDelaySeconds: 30
+        #   periodSeconds: 10
+        #   timeoutSeconds: 10
+        #   successThreshold: 1
+        #   failureThreshold: 2
+        #   httpGet:
+        #     port: 3000
+        #     path: /health
+        # readinessProbe:
+        #   initialDelaySeconds: 30
+        #   periodSeconds: 10
+        #   timeoutSeconds: 10
+        #   successThreshold: 1
+        #   failureThreshold: 2
+        #   httpGet:
+        #     port: 3000
+        #     path: /health
         envFrom:
         - secretRef:
             name: profitei-secrets-88m574bfm6
