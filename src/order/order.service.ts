@@ -223,15 +223,4 @@ export class OrderService {
       paymentData: order.details,
     };
   }
-
-  private validaterUserIdIsNumber(userId: number): number {
-    if (userId && typeof userId === 'number') {
-      return userId;
-    }
-    const parsedUserId = Number(userId);
-    if (isNaN(parsedUserId)) {
-      throw new Error('Invalid userId');
-    }
-    return parsedUserId;
-  }
 }
