@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
@@ -11,8 +12,9 @@ import { OrderModule } from './order/order.module';
 import { FirebaseAuthGuard } from './guards/security/firebase-auth.guard';
 import { SecurityGuard } from './guards/security/security.guard';
 import { FirebaseModule } from './firebase/firebase.module';
-import { ScheduleModule } from '@nestjs/schedule';
 import { HealthModule } from './health/health.module';
+import { WebhookModule } from './webhook/webhook.module';
+import { PaymentModule } from './payment/payment.module';
 
 @Module({
   imports: [
@@ -30,6 +32,8 @@ import { HealthModule } from './health/health.module';
       envFilePath: ['.env', '.env.local'],
     }),
     ScheduleModule.forRoot(),
+    WebhookModule,
+    PaymentModule,
   ],
   providers: [FirebaseAuthGuard, SecurityGuard],
 })

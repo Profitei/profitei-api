@@ -3,6 +3,10 @@ import { SecurityGuard } from './security.guard';
 import { Reflector } from '@nestjs/core';
 import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
 
+jest.mock('@golevelup/nestjs-rabbitmq', () => ({
+  isRabbitContext: jest.fn().mockReturnValue(false),
+}));
+
 describe('SecurityGuard', () => {
   let guard: SecurityGuard;
 
