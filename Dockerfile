@@ -1,4 +1,4 @@
-FROM node:21-alpine3.18 AS build
+FROM node:current-alpine AS build
 
 WORKDIR /usr/src/app
 
@@ -18,7 +18,7 @@ ENV NODE_ENV production
 # PRODUCTION
 ###################
 
-FROM node:21-alpine3.18 AS production
+FROM node:current-alpine AS production
 
 WORKDIR /usr/src/app
 
