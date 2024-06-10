@@ -5,6 +5,10 @@ import { UserService } from '../../user/user.service';
 import { Reflector } from '@nestjs/core';
 import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
 
+jest.mock('@golevelup/nestjs-rabbitmq', () => ({
+  isRabbitContext: jest.fn().mockReturnValue(false),
+}));
+
 describe('FirebaseAuthGuard', () => {
   let guard: FirebaseAuthGuard;
 

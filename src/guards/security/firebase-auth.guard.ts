@@ -5,6 +5,7 @@ import {
   Logger,
   UnauthorizedException,
 } from '@nestjs/common';
+import { isRabbitContext } from '@golevelup/nestjs-rabbitmq';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from '../../decorators/public.decorator';
 import { FirebaseService } from '../../firebase/firebase.service';
@@ -24,6 +25,10 @@ export class FirebaseAuthGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
+
+    if (isRabbitContext(context)) {
+      return true;
+    }
 
     if (isPublic) {
       return true;

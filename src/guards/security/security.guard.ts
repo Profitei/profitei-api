@@ -5,6 +5,7 @@ import {
   Logger,
   UnauthorizedException,
 } from '@nestjs/common';
+import { isRabbitContext } from '@golevelup/nestjs-rabbitmq';
 import { Observable } from 'rxjs';
 import { Reflector } from '@nestjs/core';
 import { NO_AUTH } from '../../decorators/public.decorator';
@@ -23,6 +24,10 @@ export class SecurityGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
+
+    if (isRabbitContext(context)) {
+      return true;
+    }
 
     if (noAuth) {
       return true;

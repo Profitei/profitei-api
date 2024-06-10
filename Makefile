@@ -4,14 +4,14 @@ help: ## Show this help
 	@egrep -h '\s##\s' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 start: ## Starts docker-compose and the application
-	@echo "Starting PostgresSQL"
-	@docker-compose up -d
-	@echo "Installing NestJS CLI"
-	@npm i -g @nestjs/cli
-	@echo "Installing dependencies"
-	@npm ci
+	@echo "Starting Docker containers"
+	@docker-compose up -d postgres rabbitmq
+	# @echo "Installing NestJS CLI"
+	# @npm i -g @nestjs/cli
+	# @echo "Installing dependencies"
+	# @npm ci
 	@echo "Starting application"
-	@npm run start
+	@npm run start:dev
 
 stop: ## Stops docker-compose
 	@echo "Stopping PostgresSQL"
@@ -24,11 +24,3 @@ install: ## Installs dependencies
 test: ## Runs test suite
 	@echo "Running tests"
 	@npm run test
-
-compose: ## Compose UP Application
-	@echo "Starting PostgresSQL"
-	@docker-compose up -d
-
-postgres:
-	@echo "Starting PostgresSQL"
-	@docker-compose up -d postgres
