@@ -26,15 +26,14 @@ export class MercadoPagoGuard implements CanActivate {
       request.headers;
 
     // Obtain Query params related to the request URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const dataID = urlParams.get('data.id');
+    const dataID = request.query['data.id'];
 
     // Separating the x-signature into parts
     const parts = xSignature.split(',');
 
     // Initializing variables to store ts and hash
-    let ts;
-    let hash;
+    let ts: any;
+    let hash: string;
 
     // Iterate over the values to obtain ts and v1
     parts.forEach((part) => {
