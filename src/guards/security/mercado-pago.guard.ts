@@ -9,9 +9,9 @@ import { createHmac } from 'crypto';
 
 @Injectable()
 export class MercadoPagoGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
-
   private readonly logger = new Logger(MercadoPagoGuard.name);
+
+  constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
@@ -21,21 +21,46 @@ export class MercadoPagoGuard implements CanActivate {
   private validateRequest(request: any): boolean {
     this.logger.log('Validating Mercado Pago Webhook request');
 
-    // Assuming headers is an object containing request headers
-    const { 'x-signature': xSignature, 'x-request-id': xRequestId } =
-      request.headers;
+    const xSignature: string = request.headers['x-signature'];
+    const xRequestId: string = request.headers['x-request-id'];
+    const dataID: string = request.query['data.id'];
 
-    // Obtain Query params related to the request URL
-    const dataID = request.query['data.id'];
+    if (!xSignature || !xRequestId || !dataID) {
+      this.logger.warn('Missing required headers or query parameters');
+      return false;
+    }
 
-    // Separating the x-signature into parts
-    const parts = xSignature.split(',');
+    const { ts, hash } = this.parseSignature(xSignature);
 
-    // Initializing variables to store ts and hash
-    let ts: any;
-    let hash: string;
+    if (!ts || !hash) {
+      this.logger.warn('Invalid x-signature format');
+      return false;
+    }
 
-    // Iterate over the values to obtain ts and v1
+    const secret: string = process.env.MP_SECRET_SIGN;
+    if (!secret) {
+      this.logger.error('Secret key not defined');
+      return false;
+    }
+
+    const manifest: string = `id:${dataID};request-id:${xRequestId};ts:${ts};`;
+    const generatedHash: string = this.createHmacHash(manifest, secret);
+
+    const isValid: boolean = generatedHash === hash;
+    if (isValid) {
+      this.logger.log('HMAC verification passed');
+    } else {
+      this.logger.warn('HMAC verification failed');
+    }
+
+    return isValid;
+  }
+
+  private parseSignature(signature: string): { ts: string; hash: string } {
+    const parts = signature.split(',');
+    let ts: string = '';
+    let hash: string = '';
+
     parts.forEach((part) => {
       const [key, value] = part.split('=').map((str) => str.trim());
       if (key === 'ts') {
@@ -45,20 +70,12 @@ export class MercadoPagoGuard implements CanActivate {
       }
     });
 
-    // Obtain the secret key for the user/application from Mercadopago developers site
-    const secret = process.env.MP_SECRET_SIGN;
+    return { ts, hash };
+  }
 
-    // Generate the manifest string
-    const manifest = `id:${dataID};request-id:${xRequestId};ts:${ts};`;
-
-    // Create an HMAC signature
+  private createHmacHash(manifest: string, secret: string): string {
     const hmac = createHmac('sha256', secret);
     hmac.update(manifest);
-
-    // Obtain the hash result as a hexadecimal string
-    const sha = hmac.digest('hex');
-
-    // Check if the generated HMAC matches the provided hash
-    return sha === hash;
+    return hmac.digest('hex');
   }
 }
