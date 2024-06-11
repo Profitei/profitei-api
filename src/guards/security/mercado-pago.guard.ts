@@ -21,8 +21,7 @@ export class MercadoPagoGuard implements CanActivate {
   private validateRequest(request: any): boolean {
     this.logger.log('Validating Mercado Pago Webhook request');
 
-    const xSignature: string = request.headers['x-signature'];
-    const xRequestId: string = request.headers['x-request-id'];
+    const { xSignature, xRequestId } = this.extractHeaders(request);
     const dataID: string = request.query['data.id'];
 
     if (!xSignature || !xRequestId || !dataID) {
@@ -54,6 +53,16 @@ export class MercadoPagoGuard implements CanActivate {
     }
 
     return isValid;
+  }
+
+  private extractHeaders(request: any): {
+    xSignature: string;
+    xRequestId: string;
+  } {
+    const xSignature: string = request.headers['x-signature'];
+    const xRequestId: string = request.headers['x-request-id'];
+
+    return { xSignature, xRequestId };
   }
 
   private parseSignature(signature: string): { ts: string; hash: string } {
