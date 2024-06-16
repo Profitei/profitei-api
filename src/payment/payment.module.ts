@@ -3,6 +3,8 @@ import { PaymentService } from './payment.service';
 import { PaymentConsumerService } from './payment-consumer.service';
 import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
 import { MercadoPagoService } from '../order/mercado-pago.service';
+import { OrderService } from 'src/order/order.service';
+import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
   imports: [
@@ -16,9 +18,14 @@ import { MercadoPagoService } from '../order/mercado-pago.service';
       uri: process.env.RABBITMQ_URI,
       connectionInitOptions: { wait: false },
     }),
-    MercadoPagoService,
+    PrismaModule,
   ],
-  providers: [PaymentService, PaymentConsumerService],
+  providers: [
+    PaymentService,
+    PaymentConsumerService,
+    MercadoPagoService,
+    OrderService,
+  ],
   exports: [PaymentService],
 })
 export class PaymentModule {}

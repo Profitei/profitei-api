@@ -135,6 +135,17 @@ export class OrderService {
     return this.mapOrderToDto(order);
   }
 
+  async findByPaymentId(paymentId: string): Promise<Order> {
+    const order = await this.prisma.order.findFirst({
+      where: { details: { path: ['id'], equals: paymentId } },
+      include: { items: { include: { Raffle: true } } },
+    });
+    if (!order) {
+      throw new Error('Order not found');
+    }
+    return this.mapOrderToDto(order);
+  }
+
   async findAllOrdersByStatusAndUser(
     orderStatus?: OrderStatus,
     userId?: number,

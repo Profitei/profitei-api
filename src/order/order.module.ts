@@ -8,6 +8,5 @@ import { MercadoPagoService } from './mercado-pago.service';
   controllers: [OrderController],
   providers: [OrderService, MercadoPagoService],
   imports: [PrismaModule],
-  exports: [OrderService],
 })
 export class OrderModule {}

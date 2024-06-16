@@ -22,7 +22,7 @@ export class PaymentConsumerService {
         paymentInfo.data.id,
       );
 
-      const order = await this.orderService.findOne(paymentDetails.orderId);
+      const order = await this.orderService.findByPaymentId(paymentDetails.id);
       if (paymentDetails.amount === order.paymentData.transaction_amount) {
         // Update order status
         await this.orderService.updateOrderStatus(order.id);
