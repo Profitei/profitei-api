@@ -4,9 +4,9 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { MercadoPagoService } from './mercado-pago.service';
-import { User } from 'src/user/entities/user.entity';
+import { User } from '../user/entities/user.entity';
 import { Order } from './entities/order.entity';
-import { Ticket } from 'src/ticket/entities/ticket.entity';
+import { Ticket } from '../ticket/entities/ticket.entity';
 import {
   OrderStatus,
   Order as OrderPrisma,
@@ -175,6 +175,15 @@ export class OrderService {
   update(id: number, updateOrderDto: UpdateOrderDto): string {
     this.logger.log(`Updating order #${updateOrderDto.ticketsId}`);
     return `This action updates a #${id} order`;
+  }
+
+  async updateOrderStatus(id: number): Promise<number> {
+    this.logger.log(`Updating order #${id} status to paid`);
+    const order = await this.prisma.order.update({
+      where: { id },
+      data: { status: OrderStatus.PAID },
+    });
+    return order.id;
   }
 
   remove(id: number): string {

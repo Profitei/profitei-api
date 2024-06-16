@@ -4,14 +4,13 @@ import {
   Injectable,
   Logger,
 } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
 import { createHmac } from 'crypto';
 
 @Injectable()
 export class MercadoPagoGuard implements CanActivate {
   private readonly logger = new Logger(MercadoPagoGuard.name);
 
-  constructor(private reflector: Reflector) {}
+  constructor() {}
 
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();

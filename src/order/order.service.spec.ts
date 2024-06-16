@@ -3,7 +3,7 @@ import { OrderService } from './order.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { MercadoPagoService } from './mercado-pago.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { User } from 'src/user/entities/user.entity';
+import { User } from '../user/entities/user.entity';
 import { OrderStatus } from '@prisma/client';
 
 describe('OrderService', () => {

@@ -1,7 +1,7 @@
 import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { PaymentService } from '../payment/payment.service';
-import { NoAuth, Public } from 'src/decorators/public.decorator';
-import { MercadoPagoGuard } from 'src/guards/security/mercado-pago.guard';
+import { NoAuth, Public } from '..//decorators/public.decorator';
+import { MercadoPagoGuard } from '../guards/security/mercado-pago.guard';
 
 @Controller('webhook')
 @Public()

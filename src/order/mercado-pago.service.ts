@@ -42,4 +42,17 @@ export class MercadoPagoService {
       throw new Error('Payment creation failed');
     }
   }
+
+  async getPayment(paymentId: string): Promise<any> {
+    try {
+      this.logger.log('Getting payment');
+      const result = await this.paymentClient.get({ id: paymentId });
+      this.logger.log('Payment retrieved successfully');
+
+      return result;
+    } catch (error) {
+      this.logger.error('Failed to get payment', error);
+      throw new Error('Payment retrieval failed');
+    }
+  }
 }
