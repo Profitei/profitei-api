@@ -222,7 +222,7 @@ describe('OrderController', () => {
   describe('update', () => {
     it('should update an order', async () => {
       const dto: UpdateOrderDto = { ticketsId: [1, 2] };
-      const result = await controller.update('1', dto);
+      const result = controller.update('1', dto);
       expect(result).toEqual({ id: 1, ...dto });
       expect(service.update).toHaveBeenCalledWith(1, dto);
     });
@@ -230,7 +230,7 @@ describe('OrderController', () => {
 
   describe('remove', () => {
     it('should remove an order', async () => {
-      const result = await controller.remove('1');
+      const result = controller.remove('1');
       expect(result).toEqual({ id: 1 });
       expect(service.remove).toHaveBeenCalledWith(1);
     });
