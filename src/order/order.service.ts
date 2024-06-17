@@ -146,26 +146,14 @@ export class OrderService {
     return this.mapOrderToDto(order);
   }
 
-  async findAllOrdersByStatusAndUser(
-    orderStatus?: OrderStatus,
-    userId?: number,
-  ) {
-    const validateOrderStatus = orderStatus ? OrderStatus.PENDING : undefined;
-
-    if (!userId) {
-      this.logger.log(`Start find all ${validateOrderStatus} orders`);
-    } else {
-      this.logger.log(
-        `Start find all ${validateOrderStatus} orders with user. ID: ${userId}`,
-      );
-    }
+  async findAllByUser(user: User) {
+    this.logger.log(`Start find all orders with user. ID: ${user.id}`);
 
     const response = await this.prisma.order.findMany({
       where: {
-        status: validateOrderStatus,
         items: {
-          some: {
-            userId: Number(userId),
+          every: {
+            userId: user.id,
           },
         },
       },
@@ -177,10 +165,32 @@ export class OrderService {
         },
       },
     });
-    this.logger.log(
-      `Successfully started finding all ${validateOrderStatus} orders`,
-    );
+    this.logger.log(`Successfully started finding all user orders`);
     return response.map(this.mapOrderToDto);
+  }
+
+  async findOneByUser(id: number, user: User) {
+    this.logger.log(`Start find all orders with user. ID: ${user.id}`);
+
+    const response = await this.prisma.order.findUnique({
+      where: {
+        id: id,
+        items: {
+          every: {
+            userId: user.id,
+          },
+        },
+      },
+      include: {
+        items: {
+          include: {
+            Raffle: true,
+          },
+        },
+      },
+    });
+    this.logger.log(`Successfully started finding all user orders`);
+    return this.mapOrderToDto(response);
   }
 
   update(id: number, updateOrderDto: UpdateOrderDto): string {

@@ -7,14 +7,12 @@ import {
   Param,
   Delete,
   Request,
-  Query,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { ResponseOrderDto } from './dto/response-order.dto';
 import { ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { OrderStatus } from '../enums/order-status.dto';
 import { Public } from '../decorators/public.decorator';
 
 @ApiSecurity('x-api-key')
@@ -33,13 +31,7 @@ export class OrderController {
   @ApiQuery({ name: 'orderStatus', required: false, type: 'number' })
   @ApiQuery({ name: 'userId', required: false, type: 'number' })
   @Get()
-  async findAll(
-    @Query('orderStatus') orderStatus?: OrderStatus,
-    @Query('userId') userId?: number,
-  ) {
-    if (orderStatus || userId) {
-      return this.findOrdersByStatusAndUser(orderStatus, userId);
-    }
+  async findAll() {
     const responses = await this.orderService.findAll();
     return responses.map((response) => new ResponseOrderDto(response));
   }
@@ -47,6 +39,20 @@ export class OrderController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const response = await this.orderService.findOne(+id);
+    return new ResponseOrderDto(response);
+  }
+
+  @Get('user/all')
+  async findAllByUser(@Request() req) {
+    const user = req.user;
+    const responses = await this.orderService.findAllByUser(user);
+    return responses.map((response) => new ResponseOrderDto(response));
+  }
+
+  @Get('user/:id')
+  async findOneByUser(@Request() req, @Param('id') id: string) {
+    const user = req.user;
+    const response = await this.orderService.findOneByUser(+id, user);
     return new ResponseOrderDto(response);
   }
 
@@ -58,16 +64,5 @@ export class OrderController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.orderService.remove(+id);
-  }
-
-  private async findOrdersByStatusAndUser(
-    orderStatus?: OrderStatus,
-    userId?: number,
-  ) {
-    const responses = await this.orderService.findAllOrdersByStatusAndUser(
-      orderStatus,
-      userId,
-    );
-    return responses.map((response) => new ResponseOrderDto(response));
   }
 }

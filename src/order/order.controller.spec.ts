@@ -4,7 +4,6 @@ import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { ResponseOrderDto } from './dto/response-order.dto';
-import { OrderStatus } from '../enums/order-status.dto';
 
 describe('OrderController', () => {
   let controller: OrderController;
@@ -182,42 +181,6 @@ describe('OrderController', () => {
         }),
       ]);
       expect(service.findAll).toHaveBeenCalled();
-    });
-
-    it('should return an array of orders by status and user', async () => {
-      const result = await controller.findAll(OrderStatus.PENDING, 1);
-      expect(result).toEqual([
-        new ResponseOrderDto({
-          id: 1,
-          status: 'pending',
-          created: expect.any(Date),
-          tickets: [
-            {
-              id: 1,
-              name: 'Ticket 1',
-              Raffle: { name: 'Raffle 1', price: 50 },
-            },
-            {
-              id: 2,
-              name: 'Ticket 2',
-              Raffle: { name: 'Raffle 2', price: 100 },
-            },
-          ],
-          orderPrice: 150,
-          paymentData: {
-            point_of_interaction: {
-              transaction_data: {
-                qr_code: 'someQrCode',
-                qr_code_base64: 'someQrCodeBase64',
-              },
-            },
-          },
-        }),
-      ]);
-      expect(service.findAllOrdersByStatusAndUser).toHaveBeenCalledWith(
-        OrderStatus.PENDING,
-        1,
-      );
     });
   });
 
