@@ -43,8 +43,7 @@ export class MercadoPagoService {
 
       return result;
     } catch (error) {
-      this.logger.error('Failed to create payment', error);
-      throw new BadRequestException('Payment creation failed');
+      throw new BadRequestException(`Payment creation failed ${error.message}`);
     }
   }
 
@@ -56,8 +55,7 @@ export class MercadoPagoService {
 
       return result;
     } catch (error) {
-      this.logger.error('Failed to get payment', error);
-      throw new NotFoundException('Payment retrieval failed');
+      throw new NotFoundException(`Payment retrieval failed ${error.message}`);
     }
   }
 }

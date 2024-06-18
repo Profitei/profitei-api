@@ -3,11 +3,7 @@ import { FirebaseAuthGuard } from './firebase-auth.guard';
 import { FirebaseService } from '../../firebase/firebase.service';
 import { UserService } from '../../user/user.service';
 import { Reflector } from '@nestjs/core';
-import {
-  ExecutionContext,
-  UnauthorizedException,
-  ForbiddenException,
-} from '@nestjs/common';
+import { ExecutionContext, ForbiddenException } from '@nestjs/common';
 
 jest.mock('@golevelup/nestjs-rabbitmq', () => ({
   isRabbitContext: jest.fn().mockReturnValue(false),

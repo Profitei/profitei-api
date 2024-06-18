@@ -4,6 +4,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { SecurityGuard } from './guards/security/security.guard';
 import { FirebaseAuthGuard } from './guards/security/firebase-auth.guard';
 import { LogLevel } from '@nestjs/common';
+import { HttpExceptionFilter } from './filters/http-exception.filter';
 
 async function bootstrap() {
   const logLevel: LogLevel[] =
@@ -34,6 +35,8 @@ async function bootstrap() {
   const securityGuard = app.get(SecurityGuard);
 
   app.useGlobalGuards(securityGuard, firebaseAuthGuard);
+
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   await app.listen(3000);
 }

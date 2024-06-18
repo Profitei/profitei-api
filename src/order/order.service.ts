@@ -51,8 +51,9 @@ export class OrderService {
       });
       this.logger.log('Payment created successfully');
     } catch (error) {
-      this.logger.error('Failed to create payment', error.stack);
-      throw new BadRequestException('Payment processing failed');
+      throw new BadRequestException(
+        `Failed to create payment ${error.message}`,
+      );
     }
 
     const order = await this.prisma.$transaction(async (tx) => {
@@ -81,7 +82,6 @@ export class OrderService {
     });
 
     if (tickets.length !== createOrderDto.ticketsId.length) {
-      this.logger.error('Some tickets are not available');
       throw new ConflictException('Some tickets are not available');
     }
 
@@ -153,7 +153,7 @@ export class OrderService {
   }
 
   async findAllByUser(user: User) {
-    this.logger.log(`Start find all orders with user. ID: ${user.id}`);
+    this.logger.log(`Start finding all orders from userId #${user.id}`);
 
     const response = await this.prisma.order.findMany({
       where: {
@@ -171,12 +171,19 @@ export class OrderService {
         },
       },
     });
-    this.logger.log(`Successfully started finding all user orders`);
+
+    if (!response) {
+      throw new NotFoundException(`orders from userId #${user.id} not found`);
+    }
+
+    this.logger.log(`Successfully finded all orders from userId #${user.id}`);
     return response.map(this.mapOrderToDto);
   }
 
   async findOneByUser(id: number, user: User) {
-    this.logger.log(`Start find all orders with user. ID: ${user.id}`);
+    this.logger.log(
+      `Start finding order with userID: ${user.id} orderID ${id}`,
+    );
 
     const response = await this.prisma.order.findUnique({
       where: {
@@ -195,7 +202,12 @@ export class OrderService {
         },
       },
     });
-    this.logger.log(`Successfully started finding all user orders`);
+
+    if (!response) {
+      throw new NotFoundException(`Order with ID ${id} not found`);
+    }
+
+    this.logger.log(`Order with ID ${id} found`);
     return this.mapOrderToDto(response);
   }
 
