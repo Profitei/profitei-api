@@ -1,4 +1,10 @@
-import { Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
@@ -46,7 +52,7 @@ export class OrderService {
       this.logger.log('Payment created successfully');
     } catch (error) {
       this.logger.error('Failed to create payment', error.stack);
-      throw new Error('Payment processing failed');
+      throw new BadRequestException('Payment processing failed');
     }
 
     const order = await this.prisma.$transaction(async (tx) => {
@@ -76,7 +82,7 @@ export class OrderService {
 
     if (tickets.length !== createOrderDto.ticketsId.length) {
       this.logger.error('Some tickets are not available');
-      throw new Error('Some tickets are not available');
+      throw new ConflictException('Some tickets are not available');
     }
 
     return tickets;
@@ -106,7 +112,7 @@ export class OrderService {
       include: { items: { include: { Raffle: true } } },
     });
     if (!order) {
-      throw new Error('Order not found');
+      throw new NotFoundException('Order not found');
     }
     return {
       id: order.id,
@@ -130,7 +136,7 @@ export class OrderService {
       include: { items: { include: { Raffle: true } } },
     });
     if (!order) {
-      throw new Error('Order not found');
+      throw new NotFoundException('Order not found');
     }
     return this.mapOrderToDto(order);
   }
@@ -141,7 +147,7 @@ export class OrderService {
       include: { items: { include: { Raffle: true } } },
     });
     if (!order) {
-      throw new Error('Order not found');
+      throw new NotFoundException('Order not found');
     }
     return this.mapOrderToDto(order);
   }

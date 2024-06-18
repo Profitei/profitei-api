@@ -1,5 +1,10 @@
 // mercadopago.service.ts
-import { Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { MercadoPagoConfig, Payment } from 'mercadopago';
 
 @Injectable()
@@ -39,7 +44,7 @@ export class MercadoPagoService {
       return result;
     } catch (error) {
       this.logger.error('Failed to create payment', error);
-      throw new Error('Payment creation failed');
+      throw new BadRequestException('Payment creation failed');
     }
   }
 
@@ -52,7 +57,7 @@ export class MercadoPagoService {
       return result;
     } catch (error) {
       this.logger.error('Failed to get payment', error);
-      throw new Error('Payment retrieval failed');
+      throw new NotFoundException('Payment retrieval failed');
     }
   }
 }

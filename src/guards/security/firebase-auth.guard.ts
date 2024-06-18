@@ -1,6 +1,7 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
   Logger,
   UnauthorizedException,
@@ -38,7 +39,7 @@ export class FirebaseAuthGuard implements CanActivate {
     const token = request.headers.authorization?.split(' ')[1];
 
     if (!token || typeof token !== 'string') {
-      throw new UnauthorizedException('Invalid token');
+      throw new ForbiddenException('Invalid token');
     }
 
     try {
@@ -51,7 +52,7 @@ export class FirebaseAuthGuard implements CanActivate {
       return true;
     } catch (error) {
       this.logger.error('Failed to authenticate Firebase token', error.stack);
-      throw new Error('Failed to authenticate Firebase token');
+      throw new UnauthorizedException('Failed to authenticate Firebase token');
     }
   }
 }

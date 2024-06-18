@@ -3,7 +3,11 @@ import { FirebaseAuthGuard } from './firebase-auth.guard';
 import { FirebaseService } from '../../firebase/firebase.service';
 import { UserService } from '../../user/user.service';
 import { Reflector } from '@nestjs/core';
-import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import {
+  ExecutionContext,
+  UnauthorizedException,
+  ForbiddenException,
+} from '@nestjs/common';
 
 jest.mock('@golevelup/nestjs-rabbitmq', () => ({
   isRabbitContext: jest.fn().mockReturnValue(false),
@@ -56,16 +60,16 @@ describe('FirebaseAuthGuard', () => {
     expect(result).toBe(true);
   });
 
-  it('should throw UnauthorizedException if token is missing', async () => {
+  it('should throw ForbiddenException if token is missing', async () => {
     mockReflector.getAllAndOverride.mockReturnValue(false);
     mockExecutionContext.getRequest.mockReturnValue({ headers: {} });
 
     await expect(
       guard.canActivate(mockExecutionContext as unknown as ExecutionContext),
-    ).rejects.toThrow(UnauthorizedException);
+    ).rejects.toThrow(ForbiddenException);
   });
 
-  it('should throw UnauthorizedException if token is invalid', async () => {
+  it('should throw ForbiddenException if token is invalid', async () => {
     mockReflector.getAllAndOverride.mockReturnValue(false);
     mockExecutionContext.getRequest.mockReturnValue({
       headers: { authorization: 'Bearer ' },
@@ -73,7 +77,7 @@ describe('FirebaseAuthGuard', () => {
 
     await expect(
       guard.canActivate(mockExecutionContext as unknown as ExecutionContext),
-    ).rejects.toThrow(UnauthorizedException);
+    ).rejects.toThrow(ForbiddenException);
   });
 
   it('should validate Firebase token and set user on request', async () => {

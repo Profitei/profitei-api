@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import * as admin from 'firebase-admin';
 
 @Injectable()
@@ -33,7 +37,7 @@ export class FirebaseService {
         .verifyIdToken(idToken, true);
       return decodedToken;
     } catch (error) {
-      throw new Error('Failed to verify ID token');
+      throw new UnauthorizedException('Failed to verify ID token');
     }
   }
 
@@ -42,7 +46,7 @@ export class FirebaseService {
       const userRecord = await this.adminApp.auth().getUser(uid);
       return userRecord;
     } catch (error) {
-      throw new Error('Failed to retrieve user');
+      throw new NotFoundException('Failed to retrieve user');
     }
   }
 }
