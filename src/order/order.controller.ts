@@ -34,6 +34,12 @@ export class OrderController {
     return responses.map((response) => new ResponseOrderDto(response));
   }
 
+  @Get('/all')
+  async temp() {
+    const responses = await this.orderService.findAll();
+    return responses.map((response) => new ResponseOrderDto(response));
+  }
+
   @Get(':id')
   async findOne(@Request() req, @Param('id') id: string) {
     const user = req.user;
