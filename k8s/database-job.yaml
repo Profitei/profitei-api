@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: migration-db-job
-  namespace: postgresql
+  namespace: profitei
 spec:
   ttlSecondsAfterFinished: 100
   template:
@@ -12,12 +12,9 @@ spec:
       - name: migration-db-job
         image: evmartinelli/profitei-db:latest
         command: ["/bin/sh", "-c", "npx prisma migrate deploy"]
-        env:
-          - name: DATABASE_URL
-            valueFrom:
-              secretKeyRef:
-                name: db-url-secret
-                key: dburl
+        envFrom:
+        - secretRef:
+            name: profitei-secrets-88m574bfm6
         resources:
           limits:
             cpu: "500m"
