@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   ConflictException,
   Injectable,
   Logger,
@@ -17,7 +16,10 @@ import {
   OrderStatus,
   Order as OrderPrisma,
   Ticket as TicketPrisma,
+  Prisma,
+  PrismaClient,
 } from '@prisma/client';
+import { DefaultArgs } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class OrderService {
@@ -39,37 +41,44 @@ export class OrderService {
 
     const tickets: Ticket[] = await this.getAvailableTickets(createOrderDto);
 
-    let paymentResult: any;
-    try {
-      paymentResult = await this.mercadoPagoService.createPayment({
-        transaction_amount: this.calculateTotalPrice(tickets),
-        description: this.generateOrderDescription(tickets),
-        payment_method_id: 'pix',
-        email: user.email,
-        identificationType: 'CPF',
-        number: user.cpf,
-      });
-      this.logger.log('Payment created successfully');
-    } catch (error) {
-      throw new BadRequestException(
-        `Failed to create payment ${error.message}`,
-      );
-    }
+    const paymentResult = await this.mercadoPagoService.createPayment({
+      transaction_amount: this.calculateTotalPrice(tickets),
+      description: this.generateOrderDescription(tickets),
+      payment_method_id: 'pix',
+      email: user.email,
+      identificationType: 'CPF',
+      number: user.cpf,
+    });
 
     const order = await this.prisma.$transaction(async (tx) => {
       await this.updateTicketsStatus(createOrderDto.ticketsId, user.id);
-      const createdOrder = await tx.order.create({
-        data: {
-          items: { connect: createOrderDto.ticketsId.map((id) => ({ id })) },
-          details: paymentResult,
-        },
-      });
+      const createdOrder = await this.createOrder(
+        tx,
+        createOrderDto,
+        paymentResult,
+      );
       return this.getOrderWithDetails(createdOrder.id);
     });
 
     return order;
   }
-
+  private async createOrder(
+    tx: Omit<
+      PrismaClient<Prisma.PrismaClientOptions, never, DefaultArgs>,
+      '$connect' | '$disconnect' | '$on' | '$transaction' | '$use' | '$extends'
+    >,
+    createOrderDto: CreateOrderDto,
+    paymentResult: any,
+  ) {
+    const createdOrder = await tx.order.create({
+      data: {
+        items: { connect: createOrderDto.ticketsId.map((id) => ({ id })) },
+        details: paymentResult,
+      },
+    });
+    this.logger.log(`Order ${createdOrder.id} created`);
+    return createdOrder;
+  }
   private async getAvailableTickets(
     createOrderDto: CreateOrderDto,
   ): Promise<Ticket[]> {
@@ -104,6 +113,7 @@ export class OrderService {
       where: { id: { in: ticketsIds } },
       data: { status: 'UNAVAILABLE', userId: userId },
     });
+    this.logger.log(`Tickets ${ticketsIds} updated to UNAVAILABLE`);
   }
 
   private async getOrderWithDetails(orderId: number): Promise<Order> {
