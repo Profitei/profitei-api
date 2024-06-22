@@ -21,6 +21,11 @@ import {
 } from '@prisma/client';
 import { DefaultArgs } from '@prisma/client/runtime/library';
 
+type PrismaTransaction = Omit<
+  PrismaClient<Prisma.PrismaClientOptions, never, DefaultArgs>,
+  '$connect' | '$disconnect' | '$on' | '$transaction' | '$use' | '$extends'
+>;
+
 @Injectable()
 export class OrderService {
   private readonly logger = new Logger(OrderService.name);
@@ -50,23 +55,22 @@ export class OrderService {
       number: user.cpf,
     });
 
-    const order = await this.prisma.$transaction(async (tx) => {
-      await this.updateTicketsStatus(createOrderDto.ticketsId, user.id);
-      const createdOrder = await this.createOrder(
-        tx,
-        createOrderDto,
-        paymentResult,
-      );
-      return this.getOrderWithDetails(createdOrder.id);
-    });
+    const order = await this.prisma.$transaction(
+      async (tx: PrismaTransaction) => {
+        await this.updateTicketsStatus(tx, createOrderDto.ticketsId, user.id);
+        const createdOrder = await this.createOrder(
+          tx,
+          createOrderDto,
+          paymentResult,
+        );
+        return this.getOrderWithDetails(tx, createdOrder.id);
+      },
+    );
 
     return order;
   }
   private async createOrder(
-    tx: Omit<
-      PrismaClient<Prisma.PrismaClientOptions, never, DefaultArgs>,
-      '$connect' | '$disconnect' | '$on' | '$transaction' | '$use' | '$extends'
-    >,
+    tx: PrismaTransaction,
     createOrderDto: CreateOrderDto,
     paymentResult: any,
   ) {
@@ -106,24 +110,25 @@ export class OrderService {
   }
 
   private async updateTicketsStatus(
+    tx: PrismaTransaction,
     ticketsIds: number[],
     userId: number | null,
   ): Promise<void> {
-    await this.prisma.ticket.updateMany({
+    await tx.ticket.updateMany({
       where: { id: { in: ticketsIds } },
       data: { status: 'UNAVAILABLE', userId: userId },
     });
     this.logger.log(`Tickets ${ticketsIds} updated to UNAVAILABLE`);
   }
 
-  private async getOrderWithDetails(orderId: number): Promise<Order> {
-    const order = await this.prisma.order.findUnique({
+  private async getOrderWithDetails(
+    tx: PrismaTransaction,
+    orderId: number,
+  ): Promise<Order> {
+    const order = await tx.order.findUniqueOrThrow({
       where: { id: orderId },
       include: { items: { include: { Raffle: true } } },
     });
-    if (!order) {
-      throw new NotFoundException('Order not found');
-    }
     return {
       id: order.id,
       status: order.status,
@@ -265,6 +270,7 @@ export class OrderService {
         data: { status: 'CANCELED' },
       });
       await this.updateTicketsStatus(
+        tx,
         order.tickets.map((item) => item.id),
         null,
       );

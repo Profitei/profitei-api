@@ -18,6 +18,7 @@ describe('OrderService', () => {
       create: jest.fn(),
       findMany: jest.fn(),
       findUnique: jest.fn(),
+      findUniqueOrThrow: jest.fn(),
       findFirst: jest.fn(),
       update: jest.fn(),
     },
@@ -79,7 +80,7 @@ describe('OrderService', () => {
         cb(prismaService),
       );
       mockPrismaService.order.create.mockResolvedValue({ id: 1 });
-      mockPrismaService.order.findUnique.mockResolvedValue({
+      mockPrismaService.order.findUniqueOrThrow.mockResolvedValue({
         id: 1,
         status: OrderStatus.PENDING,
         created: new Date(),
