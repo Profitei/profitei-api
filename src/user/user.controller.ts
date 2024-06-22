@@ -16,6 +16,7 @@ import {
   ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger';
+import { Public } from '../decorators/public.decorator';
 
 @ApiSecurity('x-api-key')
 @ApiTags('user')
@@ -24,6 +25,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @ApiCreatedResponse({ type: CreateUserDto, description: 'User created' })
+  @Public()
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
