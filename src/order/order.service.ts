@@ -106,7 +106,9 @@ export class OrderService {
   }
 
   private generateOrderDescription(tickets: Ticket[]): string {
-    return tickets.map((ticket) => ticket.Raffle.name).join(', ');
+    return tickets
+      .map((ticket) => `${ticket.Raffle.name} - ${ticket.name}`)
+      .join(', ');
   }
 
   private async updateTicketsStatus(

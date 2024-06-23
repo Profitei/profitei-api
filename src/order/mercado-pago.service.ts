@@ -6,6 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { MercadoPagoConfig, Payment } from 'mercadopago';
+import { PaymentCreateData } from 'mercadopago/dist/clients/payment/create/types';
 
 @Injectable()
 export class MercadoPagoService {
@@ -21,7 +22,7 @@ export class MercadoPagoService {
 
   async createPayment(req: any): Promise<any> {
     try {
-      const paymentData = {
+      const paymentData: PaymentCreateData = {
         body: {
           transaction_amount: req.transaction_amount,
           description: req.description,
@@ -34,7 +35,6 @@ export class MercadoPagoService {
             },
           },
         },
-        requestOptions: { idempotencyKey: '123' },
       };
 
       this.logger.log('Creating payment');

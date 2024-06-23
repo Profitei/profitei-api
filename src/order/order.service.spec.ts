@@ -317,7 +317,7 @@ describe('OrderService', () => {
         ...updateOrderDto,
       });
 
-      const result = await service.update(1, updateOrderDto);
+      const result = service.update(1, updateOrderDto);
       expect(result).toEqual('This action updates a #1 order');
     });
   });
