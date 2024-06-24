@@ -65,9 +65,15 @@ describe('OrderService', () => {
         cpf: '12345678900',
       } as User;
       const tickets = [
-        { id: 1, status: 'AVAILABLE', Raffle: { price: 50, name: 'Raffle 1' } },
+        {
+          id: 1,
+          name: 'Yurih',
+          status: 'AVAILABLE',
+          Raffle: { price: 50, name: 'Raffle 1' },
+        },
         {
           id: 2,
+          name: 'Fallen',
           status: 'AVAILABLE',
           Raffle: { price: 100, name: 'Raffle 2' },
         },
@@ -103,7 +109,7 @@ describe('OrderService', () => {
       });
       expect(mercadoPagoService.createPayment).toHaveBeenCalledWith({
         transaction_amount: 150,
-        description: 'Raffle 1, Raffle 2',
+        description: 'Raffle 1 - Yurih, Raffle 2 - Fallen',
         payment_method_id: 'pix',
         email: user.email,
         identificationType: 'CPF',

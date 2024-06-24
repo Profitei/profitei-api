@@ -14,6 +14,7 @@ import { Order } from './entities/order.entity';
 import { Ticket } from '../ticket/entities/ticket.entity';
 import {
   OrderStatus,
+  Status,
   Order as OrderPrisma,
   Ticket as TicketPrisma,
   Prisma,
@@ -57,7 +58,11 @@ export class OrderService {
 
     const order = await this.prisma.$transaction(
       async (tx: PrismaTransaction) => {
-        await this.updateTicketsStatus(tx, createOrderDto.ticketsId, user.id);
+        await this.markTicketsUnavailable(
+          tx,
+          createOrderDto.ticketsId,
+          user.id,
+        );
         const createdOrder = await this.createOrder(
           tx,
           createOrderDto,
@@ -115,12 +120,28 @@ export class OrderService {
     tx: PrismaTransaction,
     ticketsIds: number[],
     userId: number | null,
+    status: Status,
   ): Promise<void> {
     await tx.ticket.updateMany({
       where: { id: { in: ticketsIds } },
-      data: { status: 'UNAVAILABLE', userId: userId },
+      data: { status: status, userId: userId },
     });
-    this.logger.log(`Tickets ${ticketsIds} updated to UNAVAILABLE`);
+    this.logger.log(`Tickets ${ticketsIds} updated to ${status}`);
+  }
+
+  private async markTicketsUnavailable(
+    tx: PrismaTransaction,
+    ticketsIds: number[],
+    userId: number | null,
+  ): Promise<void> {
+    await this.updateTicketsStatus(tx, ticketsIds, userId, Status.UNAVAILABLE);
+  }
+
+  private async markTicketsAvailable(
+    tx: PrismaTransaction,
+    ticketsIds: number[],
+  ): Promise<void> {
+    await this.updateTicketsStatus(tx, ticketsIds, null, Status.AVAILABLE);
   }
 
   private async getOrderWithDetails(
@@ -249,7 +270,7 @@ export class OrderService {
   async cancelPendingOrders(): Promise<void> {
     this.logger.log('Cancelling pending orders');
     const pendingOrders = await this.prisma.order.findMany({
-      where: { status: 'PENDING' },
+      where: { status: OrderStatus.PENDING },
       include: { items: true },
     });
 
@@ -269,12 +290,11 @@ export class OrderService {
     await this.prisma.$transaction(async (tx) => {
       await tx.order.update({
         where: { id: order.id },
-        data: { status: 'CANCELED' },
+        data: { status: OrderStatus.CANCELED },
       });
-      await this.updateTicketsStatus(
+      await this.markTicketsAvailable(
         tx,
         order.tickets.map((item) => item.id),
-        null,
       );
     });
     this.logger.log(`Order ${order.id} cancelled`);

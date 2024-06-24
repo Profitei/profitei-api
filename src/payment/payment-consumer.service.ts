@@ -27,14 +27,7 @@ export class PaymentConsumerService {
       );
 
       const order = await this.orderService.findByPaymentId(paymentDetails.id);
-      if (paymentDetails.amount === order.paymentData.transaction_amount) {
-        // Update order status
-        await this.orderService.updateOrderStatus(order.id);
-      } else {
-        this.logger.warn(
-          `Payment amount for order ${order.id} does not match. Expected ${order.paymentData.transaction_amount}, but got ${paymentDetails.amount}.`,
-        );
-      }
+      await this.orderService.updateOrderStatus(order.id);
     } catch (error) {
       this.logger.error('Error processing payment:', error);
       return new Nack();

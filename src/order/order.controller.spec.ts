@@ -230,7 +230,7 @@ describe('OrderController', () => {
 
   describe('remove', () => {
     it('should remove an order', async () => {
-      const result = await controller.remove('1');
+      const result = controller.remove('1');
       expect(result).toEqual({ id: 1 });
       expect(service.remove).toHaveBeenCalledWith(1);
     });

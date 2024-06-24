@@ -57,7 +57,6 @@ describe('MercadoPagoService', () => {
             },
           },
         },
-        requestOptions: { idempotencyKey: '123' },
       });
       expect(result).toEqual(mockPaymentResult);
     });

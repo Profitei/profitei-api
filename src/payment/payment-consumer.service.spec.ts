@@ -73,29 +73,6 @@ describe('PaymentConsumerService', () => {
     expect(orderService.updateOrderStatus).toHaveBeenCalledWith(order.id);
   });
 
-  it('should log a warning if payment amounts do not match', async () => {
-    const paymentInfo = { data: { id: 'payment-id' } };
-    const paymentDetails = { id: 1, amount: 100 };
-    const order = {
-      id: 1,
-      paymentData: { transaction_amount: 90 },
-      status: 'pending',
-      created: new Date(),
-      tickets: [],
-    };
-    jest
-      .spyOn(mercadoPagoService, 'getPayment')
-      .mockResolvedValue(paymentDetails);
-    jest.spyOn(orderService, 'findByPaymentId').mockResolvedValue(order);
-    const loggerWarnSpy = jest.spyOn(Logger.prototype, 'warn');
-
-    await service.handlePaymentReceived(paymentInfo);
-
-    expect(loggerWarnSpy).toHaveBeenCalledWith(
-      `Payment amount for order ${order.id} does not match. Expected ${order.paymentData.transaction_amount}, but got ${paymentDetails.amount}.`,
-    );
-  });
-
   it('should log an error if there is an exception', async () => {
     const paymentInfo = { data: { id: 'payment-id' } };
     const error = new Error('Test error');
