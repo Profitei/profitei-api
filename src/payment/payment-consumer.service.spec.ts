@@ -73,6 +73,30 @@ describe('PaymentConsumerService', () => {
     expect(orderService.updateOrderStatus).toHaveBeenCalledWith(order.id);
   });
 
+  it('should not update order status if status is not approved', async () => {
+    const paymentInfo = { data: { id: 'payment-id' } };
+    const paymentDetails = { id: 1, amount: 100, status: 'rejected' };
+    const order = {
+      id: 1,
+      paymentData: { transaction_amount: 100 },
+      status: 'pending',
+      created: new Date(),
+      tickets: [],
+    };
+
+    jest
+      .spyOn(mercadoPagoService, 'getPayment')
+      .mockResolvedValue(paymentDetails);
+    jest.spyOn(orderService, 'findByPaymentId').mockResolvedValue(order);
+    jest.spyOn(orderService, 'updateOrderStatus');
+
+    await service.handlePaymentReceived(paymentInfo);
+
+    expect(mercadoPagoService.getPayment).toHaveBeenCalledWith('payment-id');
+    expect(orderService.findByPaymentId).not.toHaveBeenCalled();
+    expect(orderService.updateOrderStatus).not.toHaveBeenCalled();
+  });
+
   it('should log an error if there is an exception', async () => {
     const paymentInfo = { data: { id: 'payment-id' } };
     const error = new Error('Test error');
