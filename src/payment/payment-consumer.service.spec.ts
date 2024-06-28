@@ -46,9 +46,9 @@ describe('PaymentConsumerService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should handle payment received and update order status if amounts match', async () => {
+  it('should handle payment received and update order status if status approved', async () => {
     const paymentInfo = { data: { id: 'payment-id' } };
-    const paymentDetails = { id: 1, amount: 100 };
+    const paymentDetails = { id: 1, amount: 100, status: 'approved' };
     const order = {
       id: 1,
       paymentData: { transaction_amount: 100 },

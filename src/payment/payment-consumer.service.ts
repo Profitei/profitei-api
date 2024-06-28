@@ -26,8 +26,12 @@ export class PaymentConsumerService {
         paymentInfo.data.id,
       );
 
-      const order = await this.orderService.findByPaymentId(paymentDetails.id);
-      await this.orderService.updateOrderStatus(order.id);
+      if (paymentDetails.status == 'approved') {
+        const order = await this.orderService.findByPaymentId(
+          paymentDetails.id,
+        );
+        await this.orderService.updateOrderStatus(order.id);
+      }
     } catch (error) {
       this.logger.error('Error processing payment:', error);
       return new Nack();
