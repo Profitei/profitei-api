@@ -23,6 +23,7 @@ describe('RaffleService', () => {
       findMany: jest.fn(),
       findUnique: jest.fn(),
       delete: jest.fn(),
+      update: jest.fn(),
     },
   };
 
@@ -90,6 +91,7 @@ describe('RaffleService', () => {
         include: {
           category: true,
         },
+        where: { status: 'AVAILABLE' },
       });
     });
   });
@@ -121,11 +123,12 @@ describe('RaffleService', () => {
   describe('remove', () => {
     it('should remove a raffle', async () => {
       const expectedResponse = mockExpectedCreateRaffle();
-      mockPrismaService.raffle.delete.mockResolvedValue(expectedResponse);
+      mockPrismaService.raffle.update.mockResolvedValue(expectedResponse);
 
       expect(await service.remove(1)).toEqual(expectedResponse);
-      expect(prismaService.raffle.delete).toHaveBeenCalledWith({
+      expect(prismaService.raffle.update).toHaveBeenCalledWith({
         where: { id: 1 },
+        data: { status: 'UNAVAILABLE' },
       });
     });
   });

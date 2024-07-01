@@ -26,6 +26,9 @@ describe('OrderService', () => {
       findMany: jest.fn(),
       updateMany: jest.fn(),
     },
+    raffle: {
+      update: jest.fn(),
+    },
   };
 
   const mockMercadoPagoService = {
@@ -329,17 +332,113 @@ describe('OrderService', () => {
   });
 
   describe('updateOrderStatus', () => {
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
     it('should update the order status to paid', async () => {
       mockPrismaService.order.update.mockResolvedValue({
         id: 1,
         status: OrderStatus.PAID,
       });
 
+      mockPrismaService.order.findUnique.mockResolvedValue({
+        id: 1,
+        items: [{ raffleId: 1 }],
+      } as any);
+
+      mockPrismaService.ticket.findMany.mockResolvedValue([]);
+      mockPrismaService.raffle.update.mockResolvedValue(undefined);
+
       const result = await service.updateOrderStatus(1);
       expect(result).toBe(1);
       expect(mockPrismaService.order.update).toHaveBeenCalledWith({
         where: { id: 1 },
         data: { status: OrderStatus.PAID },
+      });
+      expect(mockPrismaService.order.findUnique).toHaveBeenCalledWith({
+        where: { id: 1 },
+        include: { items: { include: { Raffle: true } } },
+      });
+      expect(mockPrismaService.ticket.findMany).toHaveBeenCalledWith({
+        where: {
+          raffleId: 1,
+          OR: [
+            { Order: null },
+            { Order: { status: { not: OrderStatus.PAID } } },
+          ],
+        },
+      });
+      expect(mockPrismaService.raffle.update).toHaveBeenCalledWith({
+        where: { id: 1 },
+        data: { status: 'AWAITING_DRAW' },
+      });
+    });
+
+    it('should not update raffle status if there are unpaid tickets', async () => {
+      mockPrismaService.order.update.mockResolvedValue({
+        id: 1,
+        status: OrderStatus.PAID,
+      });
+
+      mockPrismaService.order.findUnique.mockResolvedValue({
+        id: 1,
+        items: [{ raffleId: 1 }],
+      } as any);
+
+      mockPrismaService.ticket.findMany.mockResolvedValue([{ id: 1 }]);
+
+      const result = await service.updateOrderStatus(1);
+      expect(result).toBe(1);
+      expect(mockPrismaService.order.update).toHaveBeenCalledWith({
+        where: { id: 1 },
+        data: { status: OrderStatus.PAID },
+      });
+      expect(mockPrismaService.order.findUnique).toHaveBeenCalledWith({
+        where: { id: 1 },
+        include: { items: { include: { Raffle: true } } },
+      });
+      expect(mockPrismaService.ticket.findMany).toHaveBeenCalledWith({
+        where: {
+          raffleId: 1,
+          OR: [
+            { Order: null },
+            { Order: { status: { not: OrderStatus.PAID } } },
+          ],
+        },
+      });
+      expect(mockPrismaService.raffle.update).not.toHaveBeenCalled();
+    });
+
+    it('should throw an error if order update fails', async () => {
+      mockPrismaService.order.update.mockRejectedValue(
+        new Error('Update failed'),
+      );
+
+      await expect(service.updateOrderStatus(1)).rejects.toThrow(
+        'Update failed',
+      );
+      expect(mockPrismaService.order.update).toHaveBeenCalledWith({
+        where: { id: 1 },
+        data: { status: OrderStatus.PAID },
+      });
+    });
+
+    it('should throw an error if order not found', async () => {
+      mockPrismaService.order.update.mockResolvedValue({
+        id: 1,
+        status: OrderStatus.PAID,
+      });
+
+      mockPrismaService.order.findUnique.mockResolvedValue(null);
+
+      await expect(service.updateOrderStatus(1)).rejects.toThrow();
+      expect(mockPrismaService.order.update).toHaveBeenCalledWith({
+        where: { id: 1 },
+        data: { status: OrderStatus.PAID },
+      });
+      expect(mockPrismaService.order.findUnique).toHaveBeenCalledWith({
+        where: { id: 1 },
+        include: { items: { include: { Raffle: true } } },
       });
     });
   });

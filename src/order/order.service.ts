@@ -74,6 +74,7 @@ export class OrderService {
 
     return order;
   }
+
   private async createOrder(
     tx: PrismaTransaction,
     createOrderDto: CreateOrderDto,
@@ -88,6 +89,7 @@ export class OrderService {
     this.logger.log(`Order ${createdOrder.id} created`);
     return createdOrder;
   }
+
   private async getAvailableTickets(
     createOrderDto: CreateOrderDto,
   ): Promise<Ticket[]> {
@@ -269,20 +271,21 @@ export class OrderService {
       where: { id: orderId },
       include: { items: { include: { Raffle: true } } },
     });
-    const raffleId = order.items[0].raffleId;
+
+    const raffleId = order.items[0]?.raffleId;
 
     if (raffleId) {
-      const allPaid = await this.prisma.ticket.findMany({
+      const unpaidTickets = await this.prisma.ticket.findMany({
         where: {
           raffleId,
           OR: [
-            { Order: { status: OrderStatus.PAID } },
-            { status: Status.AVAILABLE },
+            { Order: null },
+            { Order: { status: { not: OrderStatus.PAID } } },
           ],
         },
       });
 
-      const allTicketsPaid = allPaid.length === 0;
+      const allTicketsPaid = unpaidTickets.length === 0;
 
       if (allTicketsPaid) {
         await this.prisma.raffle.update({
