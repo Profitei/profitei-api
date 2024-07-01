@@ -260,7 +260,37 @@ export class OrderService {
       where: { id },
       data: { status: OrderStatus.PAID },
     });
+    await this.checkAndUpdateRaffleStatus(order.id);
     return order.id;
+  }
+
+  private async checkAndUpdateRaffleStatus(orderId: number) {
+    const order = await this.prisma.order.findUnique({
+      where: { id: orderId },
+      include: { items: { include: { Raffle: true } } },
+    });
+    const raffleId = order.items[0].raffleId;
+
+    if (raffleId) {
+      const allPaid = await this.prisma.ticket.findMany({
+        where: {
+          raffleId,
+          OR: [
+            { Order: { status: OrderStatus.PAID } },
+            { status: Status.AVAILABLE },
+          ],
+        },
+      });
+
+      const allTicketsPaid = allPaid.length === 0;
+
+      if (allTicketsPaid) {
+        await this.prisma.raffle.update({
+          where: { id: raffleId },
+          data: { status: Status.AWAITING_DRAW },
+        });
+      }
+    }
   }
 
   remove(id: number): string {
