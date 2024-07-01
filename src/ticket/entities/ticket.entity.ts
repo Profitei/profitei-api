@@ -5,5 +5,6 @@ export class Ticket {
     id: number;
     name: string;
     price: number;
+    status: string;
   } | null;
 }
