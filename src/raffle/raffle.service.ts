@@ -36,6 +36,9 @@ export class RaffleService {
       include: {
         category: true,
       },
+      where: {
+        status: AvailableDto.AVAILABLE,
+      },
     });
   }
 
