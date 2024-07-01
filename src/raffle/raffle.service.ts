@@ -58,7 +58,12 @@ export class RaffleService {
   }
 
   remove(id: number) {
-    return this.prisma.raffle.delete({ where: { id } });
+    return this.prisma.raffle.update({
+      data: {
+        status: AvailableDto.UNAVAILABLE,
+      },
+      where: { id },
+    });
   }
 
   private mapDtoToPrismaInput(dto: CreateRaffleDto) {
