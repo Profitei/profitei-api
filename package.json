@@ -39,7 +39,7 @@
     "amqplib": "^0.10.4",
     "class-validator": "^0.14.1",
     "firebase-admin": "^12.1.1",
-    "mercadopago": "^2.0.9",
+    "mercadopago": "^2.0.11",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "swagger-ui-express": "^5.0.1",
