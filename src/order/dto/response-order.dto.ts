@@ -14,13 +14,15 @@ export class ResponseOrderDto {
       (ticket: {
         id: number;
         name: string;
-        Raffle: { name: any; price: any };
+        Raffle: Raffle;
       }) => ({
         id: ticket.id,
         name: ticket.name,
         raffle: {
           price: ticket.Raffle.price,
           name: ticket.Raffle.name,
+          status: ticket.Raffle.status
+
         },
       }),
     );
@@ -48,6 +50,7 @@ export class Tickets {
 export class Raffle {
   price: number;
   name: string;
+  status: string;
 }
 export class PixData {
   qrCode: string;
