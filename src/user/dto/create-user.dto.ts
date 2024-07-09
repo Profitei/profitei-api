@@ -26,6 +26,11 @@ export class CreateUserDto {
   @IsNotEmpty()
   cpf: string;
 
+  @ApiProperty({ example: 'https://my-trade-link', description: 'The tradelink of the User' })
+  @IsString()
+  @IsNotEmpty()
+  tradelink: string;
+
   @IsDate()
   @IsNotEmpty()
   created: Date;

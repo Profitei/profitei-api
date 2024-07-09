@@ -80,11 +80,12 @@ model Category {
 }
 
 model User {
-  id       Int       @id @default(autoincrement())
-  name     String
-  email    String    @unique
-  cpf      String
-  Ticket   Ticket[]
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
+  cpf       String
+  tradelink String
+  Ticket    Ticket[]
   DeviceToken DeviceToken[]
   created  DateTime  @default(now()) @map("created_at")
   modified DateTime? @updatedAt @map("updated_at")
