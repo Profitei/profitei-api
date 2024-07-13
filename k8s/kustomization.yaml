@@ -15,7 +15,7 @@ namespace: profitei
 #     envs:
 #       - .env
 #     files:
-#       - FIREBASE_ADMIN_SDK=./profitei-firebase-adminsdk-ikxkn-c7414886c1.json
+#       - FIREBASE_ADMIN_SDK=./profitei-net-firebase-adminsdk-pd39h-908588975a.json
 
 
 images:
