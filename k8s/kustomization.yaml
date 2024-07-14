@@ -24,4 +24,4 @@ images:
   newTag: latest
 - name: evmartinelli/profitei:latest
   newName: evmartinelli/profitei
-  newTag: 820991785aeabe913b837d8e76da0fb653f81169
+  newTag: 6a4e4da67dde94ae7f8206541341238b5caa63cc
