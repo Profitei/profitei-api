@@ -14,7 +14,7 @@ spec:
         command: ["/bin/sh", "-c", "npx prisma migrate deploy"]
         envFrom:
         - secretRef:
-            name: profitei-secrets-88m574bfm6
+            name: profitei-secrets-hcgg58tb25
         resources:
           limits:
             cpu: "500m"
