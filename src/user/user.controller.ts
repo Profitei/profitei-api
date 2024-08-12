@@ -18,6 +18,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Public } from '../decorators/public.decorator';
+import { DeviceTokenDto } from './dto/device-token.dto';
 
 @ApiSecurity('x-api-key')
 @ApiTags('user')
@@ -35,6 +36,17 @@ export class UserController {
   @Get()
   findAll() {
     return this.userService.findAll();
+  }
+
+  @Post('/device/token')
+  async device(@Request() req, @Body() deviceTokenDto: DeviceTokenDto) {
+    const user = req.user;
+    return this.userService.device(user, deviceTokenDto.deviceToken);
+  }
+
+  @Get('/device/token')
+  async getDevices() {
+    return this.userService.findDevices();
   }
 
   @Get(':id')
@@ -55,16 +67,5 @@ export class UserController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
-  }
-
-  @Post('/device')
-  async device(@Request() req, @Body() deviceToken: string) {
-    const user = req.user;
-    return this.userService.device(user, deviceToken);
-  }
-
-  @Get('/device')
-  async getDevices() {
-    return this.userService.findDevices();
   }
 }
