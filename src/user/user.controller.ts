@@ -62,4 +62,9 @@ export class UserController {
     const user = req.user;
     return this.userService.device(user, deviceToken);
   }
+
+  @Get('/device')
+  async getDevices() {
+    return this.userService.findDevices();
+  }
 }

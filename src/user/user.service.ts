@@ -42,4 +42,8 @@ export class UserService {
       },
     });
   }
+
+  findDevices() {
+    return this.prisma.deviceToken.findMany();
+  }
 }
