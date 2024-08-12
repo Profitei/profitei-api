@@ -32,6 +32,7 @@ describe('UserService', () => {
         email: 'john.doe@example.com',
         cpf: '123456789',
         created: new Date(),
+        tradelink: '',
       };
 
       const createdUser = mockCreateUser();
@@ -60,6 +61,8 @@ describe('UserService', () => {
           cpf: '123456789',
           created: new Date(),
           modified: new Date(),
+          tradelink:
+            'https://steamcommunity.com/tradeoffer/new/?partner=123456789&',
         },
         {
           id: 2,
@@ -68,6 +71,8 @@ describe('UserService', () => {
           cpf: '1234567891',
           created: new Date(),
           modified: new Date(),
+          tradelink:
+            'https://steamcommunity.com/tradeoffer/new/?partner=123456789&',
         },
       ];
 
@@ -90,6 +95,8 @@ describe('UserService', () => {
         cpf: '123456789',
         created: new Date(),
         modified: new Date(),
+        tradelink:
+          'https://steamcommunity.com/tradeoffer/new/?partner=123456789&',
       };
 
       jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(mockUser);
@@ -112,6 +119,8 @@ describe('UserService', () => {
         email: 'updated.email@example.com',
         cpf: '987654321',
         modified: new Date(),
+        tradelink:
+          'https://steamcommunity.com/tradeoffer/new/?partner=123456789&',
       };
 
       const updatedUser = mockCreateUser();
@@ -141,6 +150,8 @@ describe('UserService', () => {
         cpf: '123456789',
         created: new Date(),
         modified: new Date(),
+        tradelink:
+          'https://steamcommunity.com/tradeoffer/new/?partner=123456789&',
       };
 
       jest.spyOn(prismaService.user, 'delete').mockResolvedValue(mockUser);

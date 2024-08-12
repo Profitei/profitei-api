@@ -73,6 +73,8 @@ describe('UserController', () => {
         cpf: '2121212',
         email: 'value',
         created: new Date(),
+        tradelink:
+          'https://steamcommunity.com/tradeoffer/new/?partner=123456789&',
         ...mockVolatileValues(),
       };
 

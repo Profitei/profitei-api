@@ -11,6 +11,8 @@ export function mockCreateUser() {
     email: 'john.doe@example.com',
     cpf: '123456789',
     created: new Date(),
+    tradelink:
+      'https://steamcommunity.com/tradeoffer/new/?partner=123456789&token=123456789',
   };
 }
 
@@ -23,6 +25,7 @@ export function mockUsers() {
       cpf: '123456789',
       created: new Date(),
       modified: new Date(),
+      tradelink: '',
     },
     {
       id: 2,
@@ -31,6 +34,8 @@ export function mockUsers() {
       cpf: '1234567891',
       created: new Date(),
       modified: new Date(),
+      tradelink:
+        'https://steamcommunity.com/tradeoffer/new/?partner=123456789&token=123456789',
     },
   ];
 }

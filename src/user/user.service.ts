@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
@@ -29,5 +30,16 @@ export class UserService {
 
   remove(id: number) {
     return this.prisma.user.delete({ where: { id } });
+  }
+
+  device(user: User, deviceToken: string) {
+    return this.prisma.deviceToken.upsert({
+      where: { token: deviceToken },
+      update: {},
+      create: {
+        token: deviceToken,
+        user: { connect: { id: user.id } },
+      },
+    });
   }
 }
