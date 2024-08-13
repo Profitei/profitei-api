@@ -83,7 +83,8 @@ model User {
   id        Int       @id @default(autoincrement())
   name      String
   email     String    @unique
-  cpf       String
+  cpf       String?
+  avatar    String?
   tradelink String?
   Ticket    Ticket[]
   DeviceToken DeviceToken[]
