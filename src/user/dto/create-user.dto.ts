@@ -23,8 +23,13 @@ export class CreateUserDto {
 
   @ApiProperty({ example: '12345678900', description: 'The cpf of the User' })
   @IsString()
-  @IsNotEmpty()
-  cpf: string;
+  @IsOptional()
+  cpf?: string;
+
+  @ApiProperty({ example: 'pic.jpg', description: 'The image of the User' })
+  @IsString()
+  @IsOptional()
+  image?: string;
 
   @ApiProperty({
     example: 'https://my-trade-link',

@@ -3,6 +3,7 @@ export class User {
   name: string;
   email: string;
   cpf: string;
+  image: string;
   created: Date;
   modified?: Date;
 }

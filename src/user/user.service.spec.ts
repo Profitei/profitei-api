@@ -59,6 +59,7 @@ describe('UserService', () => {
           name: 'John Doe',
           email: 'john.doe@example.com',
           cpf: '123456789',
+          image: 'pic.png',
           created: new Date(),
           modified: new Date(),
           tradelink:
@@ -69,6 +70,7 @@ describe('UserService', () => {
           name: 'Jane Smith',
           email: 'jane.smith@example.com',
           cpf: '1234567891',
+          image: 'pic.png',
           created: new Date(),
           modified: new Date(),
           tradelink:
@@ -93,6 +95,7 @@ describe('UserService', () => {
         name: 'John Doe',
         email: 'john.doe@example.com',
         cpf: '123456789',
+        image: 'pic.png',
         created: new Date(),
         modified: new Date(),
         tradelink:
@@ -148,6 +151,7 @@ describe('UserService', () => {
         name: 'John Doe',
         email: 'john.doe@example.com',
         cpf: '123456789',
+        image: 'pic.png',
         created: new Date(),
         modified: new Date(),
         tradelink:

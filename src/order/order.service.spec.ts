@@ -246,6 +246,7 @@ describe('OrderService', () => {
         id: 1,
         email: 'test@test.com',
         cpf: '12345678901',
+        image: 'pic.png',
         created: new Date(),
         name: 'Test User',
       };
@@ -287,6 +288,7 @@ describe('OrderService', () => {
         id: 1,
         email: 'test@test.com',
         cpf: '12345678901',
+        image: 'pic.png',
         created: new Date(),
         name: 'Test User',
       };

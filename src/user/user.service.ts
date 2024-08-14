@@ -46,4 +46,17 @@ export class UserService {
   findDevices() {
     return this.prisma.deviceToken.findMany();
   }
+
+  google(user: User, createUserDto: CreateUserDto) {
+    if (user.email !== null) {
+      return this.prisma.user.update({
+        where: { email: user.email },
+        data: {
+          image: createUserDto.image,
+        },
+      });
+    } else {
+      return this.prisma.user.create({ data: createUserDto });
+    }
+  }
 }

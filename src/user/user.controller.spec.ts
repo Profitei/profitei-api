@@ -72,6 +72,7 @@ describe('UserController', () => {
         name: 'John Doe',
         cpf: '2121212',
         email: 'value',
+        image: 'image.png',
         created: new Date(),
         tradelink:
           'https://steamcommunity.com/tradeoffer/new/?partner=123456789&',

@@ -38,10 +38,14 @@ export class UserController {
     return this.userService.findAll();
   }
 
+  @Post('social/google')
+  async google(@Request() req, @Body() createUserDto: CreateUserDto) {
+    return this.userService.google(req.user, createUserDto);
+  }
+
   @Post('/device/token')
   async device(@Request() req, @Body() deviceTokenDto: DeviceTokenDto) {
-    const user = req.user;
-    return this.userService.device(user, deviceTokenDto.deviceToken);
+    return this.userService.device(req.user, deviceTokenDto.deviceToken);
   }
 
   @Get('/device/token')
