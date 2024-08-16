@@ -37,10 +37,12 @@ export class CreateUserDto {
   })
   @IsString()
   @IsNotEmpty()
+  @IsOptional()
   tradelink: string;
 
   @IsDate()
   @IsNotEmpty()
+  @IsOptional()
   created: Date;
 
   @IsDate()

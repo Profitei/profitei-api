@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { SecurityGuard } from './guards/security/security.guard';
 import { FirebaseAuthGuard } from './guards/security/firebase-auth.guard';
-import { LogLevel } from '@nestjs/common';
+import { LogLevel, ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 
 async function bootstrap() {
@@ -37,6 +37,16 @@ async function bootstrap() {
   app.useGlobalGuards(securityGuard, firebaseAuthGuard);
 
   app.useGlobalFilters(new HttpExceptionFilter());
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+    }),
+  );
 
   await app.listen(3000);
 }
