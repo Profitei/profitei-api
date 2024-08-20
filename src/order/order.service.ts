@@ -52,8 +52,8 @@ export class OrderService {
       description: this.generateOrderDescription(tickets),
       payment_method_id: 'pix',
       email: user.email,
-      identificationType: 'E-MAIL',
-      number: user.email,
+      identificationType: 'CPF',
+      number: user.cpf,
     });
 
     const order = await this.prisma.$transaction(
