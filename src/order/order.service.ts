@@ -163,13 +163,6 @@ export class OrderService {
     };
   }
 
-  async findAll(): Promise<Order[]> {
-    const orders = await this.prisma.order.findMany({
-      include: { items: { include: { Raffle: true } } },
-    });
-    return orders.map(this.mapOrderToDto);
-  }
-
   async findOne(id: number): Promise<Order> {
     const order = await this.prisma.order.findUnique({
       where: { id },
