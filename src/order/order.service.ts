@@ -191,13 +191,16 @@ export class OrderService {
     const response = await this.prisma.order.findMany({
       where: {
         items: {
-          every: {
+          some: {
             userId: user.id,
           },
         },
       },
       include: {
         items: {
+          where: {
+            userId: user.id,
+          },
           include: {
             Raffle: true,
           },
