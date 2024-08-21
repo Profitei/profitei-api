@@ -48,7 +48,7 @@ export class UserService {
   }
 
   google(user: User, createUserDto: CreateUserDto) {
-    if (user.email !== null) {
+    if (user) {
       return this.prisma.user.update({
         where: { email: user.email },
         data: {
