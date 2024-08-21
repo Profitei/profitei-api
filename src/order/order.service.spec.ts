@@ -115,8 +115,8 @@ describe('OrderService', () => {
         description: 'Raffle 1 - Yurih, Raffle 2 - Fallen',
         payment_method_id: 'pix',
         email: user.email,
-        identificationType: 'CPF',
-        number: user.cpf,
+        identificationType: 'E-MAIL',
+        number: user.email,
       });
     });
 
