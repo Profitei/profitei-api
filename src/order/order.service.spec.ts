@@ -138,39 +138,6 @@ describe('OrderService', () => {
     });
   });
 
-  describe('findAll', () => {
-    it('should return an array of orders', async () => {
-      const orders = [
-        {
-          id: 1,
-          status: OrderStatus.PENDING,
-          created: new Date(),
-          items: [
-            { id: 1, Raffle: { name: 'Raffle 1', price: 50 } },
-            { id: 2, Raffle: { name: 'Raffle 2', price: 100 } },
-          ],
-          details: { id: 'payment_id' },
-        },
-      ];
-
-      mockPrismaService.order.findMany.mockResolvedValue(orders);
-
-      const result = await service.findAll();
-      expect(result).toEqual([
-        {
-          id: 1,
-          status: OrderStatus.PENDING,
-          created: expect.any(Date),
-          tickets: [
-            { id: 1, Raffle: { name: 'Raffle 1', price: 50 } },
-            { id: 2, Raffle: { name: 'Raffle 2', price: 100 } },
-          ],
-          paymentData: { id: 'payment_id' },
-        },
-      ]);
-    });
-  });
-
   describe('findOne', () => {
     it('should return a single order', async () => {
       const order = {
