@@ -23,6 +23,7 @@ jobs:
           files: |
             prisma/**
             .github/**
+            k8s/database-job.yaml
   docker:
     runs-on: ubuntu-latest
     steps:
