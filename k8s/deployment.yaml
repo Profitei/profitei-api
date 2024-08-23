@@ -48,7 +48,7 @@ spec:
             path: /health
         envFrom:
         - secretRef:
-            name: profitei-secrets-hcgg58tb25
+            name: profitei-secrets-cchk2gcd4b
         env:
           - name: FIREBASE_ADMIN_SDK
             value: "/var/secrets/google/profitei-firebase-adminsdk-ikxkn-c7414886c1.json"
@@ -59,7 +59,7 @@ spec:
       volumes:
         - name: google-cloud-key
           secret:
-            secretName: profitei-secrets-hcgg58tb25
+            secretName: profitei-secrets-cchk2gcd4b
             items:
               - key: FIREBASE_ADMIN_SDK
                 path: profitei-firebase-adminsdk-ikxkn-c7414886c1.json
