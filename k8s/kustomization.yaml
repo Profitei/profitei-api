@@ -10,12 +10,12 @@ resources:
 
 namespace: profitei
 
-secretGenerator:
-- envs:
-  - .env
-  files:
-  - FIREBASE_ADMIN_SDK=./profitei-net-firebase-adminsdk-pd39h-908588975a.json
-  name: profitei-secrets
+# secretGenerator:
+# - envs:
+#   - .env
+#   files:
+#   - FIREBASE_ADMIN_SDK=./profitei-net-firebase-adminsdk-pd39h-908588975a.json
+#   name: profitei-secrets
 
 
 images:
