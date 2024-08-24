@@ -113,13 +113,6 @@ describe('RaffleService', () => {
     });
   });
 
-  describe('update', () => {
-    it('should return a string indicating the update action', () => {
-      const dto = { categoryId: 1 };
-      expect(service.update(1, dto)).toBe('This action updates a #1 raffle');
-    });
-  });
-
   describe('remove', () => {
     it('should remove a raffle', async () => {
       const expectedResponse = mockExpectedCreateRaffle();
