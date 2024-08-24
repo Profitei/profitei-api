@@ -55,7 +55,14 @@ export class RaffleService {
   }
 
   update(id: number, updateRaffleDto: UpdateRaffleDto) {
-    return `This action updates a #${updateRaffleDto.categoryId} raffle`;
+    return this.prisma.raffle.update({
+      where: { id },
+      data: {
+        steamPrice: updateRaffleDto.steamPrice,
+        isFeatured: updateRaffleDto.isFeatured,
+        properties: this.createProperties(updateRaffleDto.properties),
+      },
+    });
   }
 
   remove(id: number) {
