@@ -13,6 +13,7 @@ describe('SummaryResponseDto', () => {
         name: 'Category 1',
       },
       isFeatured: true,
+      steamPrice: 500,
     };
   });
 
@@ -49,5 +50,10 @@ describe('SummaryResponseDto', () => {
   it('should set the isFeatured property correctly', () => {
     const dto = new SummaryResponseDto(data);
     expect(dto.isFeatured).toEqual(data.isFeatured);
+  });
+
+  it('should set the steamPrice property correctly', () => {
+    const dto = new SummaryResponseDto(data);
+    expect(dto.steamPrice).toEqual(data.steamPrice);
   });
 });

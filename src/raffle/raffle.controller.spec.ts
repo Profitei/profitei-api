@@ -55,6 +55,8 @@ describe('RaffleController', () => {
         price: 10,
         quantity: 10,
         categoryId: 1,
+        isFeatured: true,
+        steamPrice: 100,
       };
       expect(await controller.create(dto)).toEqual(dto);
       expect(service.create).toHaveBeenCalledWith(dto);

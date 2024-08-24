@@ -10,6 +10,8 @@ export const mockCreateRaffle = () => ({
     { name: 'Property 1', value: 'Value 1' },
     { name: 'Property 2', value: 'Value 2' },
   ],
+  isFeatured: true,
+  steamPrice: 500,
 });
 
 export const mockExpectedCreateRaffle = () => ({
@@ -117,6 +119,8 @@ export const mockCalledWith = () => ({
       id: 1,
     },
   },
+  steamPrice: 500,
+  isFeatured: true,
   properties: {
     createMany: {
       data: [

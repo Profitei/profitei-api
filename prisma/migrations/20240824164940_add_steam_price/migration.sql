@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Raffle" ADD COLUMN     "steamPrice" DOUBLE PRECISION NOT NULL DEFAULT 0;

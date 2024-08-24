@@ -21,6 +21,7 @@ export class RaffleService {
       data: raffleCreateInput,
     });
   }
+
   findAll() {
     return this.prisma.raffle.findMany({
       include: {
@@ -79,6 +80,8 @@ export class RaffleService {
       status: AvailableDto.AVAILABLE,
       properties: this.createProperties(dto.properties),
       tickets: this.createTickets(dto.quantity),
+      steamPrice: dto.steamPrice,
+      isFeatured: dto.isFeatured ?? true,
     };
 
     return prismaInput;
@@ -123,4 +126,6 @@ export interface CreateRafflePrismaInput {
   status: AvailableDto;
   properties: any;
   tickets: any;
+  steamPrice: number;
+  isFeatured: boolean;
 }

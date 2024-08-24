@@ -1,4 +1,10 @@
-import { IsString, IsNumber, IsArray, IsOptional } from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  IsArray,
+  IsOptional,
+  IsBoolean,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateRaffleDto {
@@ -38,4 +44,13 @@ export class CreateRaffleDto {
   @ApiProperty({ example: '1' })
   @IsNumber()
   categoryId: number;
+
+  @ApiProperty({ example: true })
+  @IsBoolean()
+  @IsOptional()
+  isFeatured: boolean;
+
+  @ApiProperty({ example: 30.0 })
+  @IsNumber()
+  steamPrice: number;
 }

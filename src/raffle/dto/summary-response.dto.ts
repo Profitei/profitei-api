@@ -5,6 +5,7 @@ export class SummaryResponseDto {
   price: number;
   categoryName: string;
   isFeatured: boolean;
+  steamPrice: number;
 
   constructor(data: any) {
     this.id = data.id;
@@ -13,5 +14,6 @@ export class SummaryResponseDto {
     this.price = data.price;
     this.categoryName = data.category.name;
     this.isFeatured = data.isFeatured;
+    this.steamPrice = data.steamPrice;
   }
 }

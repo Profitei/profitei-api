@@ -26,6 +26,7 @@ model Raffle {
   created    DateTime     @default(now()) @map("created_at")
   modified   DateTime?    @updatedAt @map("updated_at")
   isFeatured Boolean      @default(true)
+  steamPrice Float        @default(0)
 }
 
 model Ticket {
