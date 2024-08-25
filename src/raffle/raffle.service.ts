@@ -60,7 +60,6 @@ export class RaffleService {
       data: {
         steamPrice: updateRaffleDto.steamPrice,
         isFeatured: updateRaffleDto.isFeatured,
-        properties: this.createProperties(updateRaffleDto.properties),
       },
     });
   }
