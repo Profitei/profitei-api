@@ -1,5 +1,6 @@
 import {
   Injectable,
+  Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -8,6 +9,7 @@ import * as admin from 'firebase-admin';
 @Injectable()
 export class FirebaseService {
   private adminApp: admin.app.App;
+  private readonly logger = new Logger(FirebaseService.name);
 
   constructor() {
     const serviceAccount = process.env.FIREBASE_ADMIN_SDK;
@@ -37,6 +39,7 @@ export class FirebaseService {
         .verifyIdToken(idToken, true);
       return decodedToken;
     } catch (error) {
+      this.logger.error(error);
       throw new UnauthorizedException('Failed to verify ID token');
     }
   }
@@ -46,6 +49,7 @@ export class FirebaseService {
       const userRecord = await this.adminApp.auth().getUser(uid);
       return userRecord;
     } catch (error) {
+      this.logger.error(error);
       throw new NotFoundException('Failed to retrieve user');
     }
   }
