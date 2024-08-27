@@ -1,17 +1,79 @@
-name: Push Docker and Execute Database
+name: CI Pipeline
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
+      - stage
+      - dev
+  workflow_dispatch:
+
+permissions:
+  checks: write
 
 jobs:
+  quality:
+    name: 'Quality'
+    runs-on: ubuntu-latest
+    steps:
+      - name: '⚙ Set up Node.js v4'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+
+      - name: '✅ Checkout repository'
+        uses: actions/checkout@v4
+
+      - name: '💾 Restore packages from cache'
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: '🦉 GitGuardian scan'
+        uses: GitGuardian/ggshield-action@master
+        env:
+          GITHUB_PUSH_BEFORE_SHA: ${{ github.event.before }}
+          GITHUB_PUSH_BASE_SHA: ${{ github.event.base }}
+          GITHUB_PULL_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          GITHUB_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
+
+      - name: '📦 Install packages'
+        run: npm install
+
+      - name: '🔦 Build'
+        run: npm run build
+
+      - name: '💅 Lint'
+        run: npm run lint
+
+      - name: '👨‍💻 Run Test'
+        run: npm run test:cov
+        env:
+          NODE_ENV: 'test'
+
+      - name: '📊 Publish Test Report'
+        uses: mikepenz/action-junit-report@v4
+        if: always()
+        with:
+          report_paths: '**/junit.xml'
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: Profitei/profitei-api
+
   check-changed:
+    name: Test changed-files
     runs-on: ubuntu-latest
     outputs:
       changed-files-database: ${{ steps.changed-files.outputs.any_changed }}
-    name: Test changed-files
     steps:
       - uses: actions/checkout@v4
         with:
@@ -24,8 +86,11 @@ jobs:
             prisma/**
             .github/**
             k8s/database-job.yaml
+
   docker:
+    name: Build and Push Docker
     runs-on: ubuntu-latest
+    needs: quality  # Depende do sucesso do job `quality`
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -44,28 +109,11 @@ jobs:
           tags: |
             evmartinelli/profitei:${{ github.sha }}
             evmartinelli/profitei:latest
-  build:
-    name: Build
-    needs: docker
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: imranismail/setup-kustomize@v2
-      - name: update k8s
-        run: |
-          cd k8s
-          kustomize edit set image evmartinelli/profitei:latest=evmartinelli/profitei:${{ github.sha }}
-          cat kustomization.yaml
-      
-      - name: commit
-        run: |          
-          git config --global user.email "gh@action.com"
-          git config --global user.name "GH Actions"
-          git commit -am "Set 'profitei' image tag to '${{ github.sha }}'"
-          git push
+
   docker-database:
+    name: Build and Push Docker Database
     runs-on: ubuntu-latest
-    needs: check-changed
+    needs: [quality, check-changed]
     if: needs.check-changed.outputs.changed-files-database == 'true'
     steps:
       - name: Set up QEMU
@@ -86,8 +134,29 @@ jobs:
           tags: |
             evmartinelli/profitei-db:${{ github.sha }}
             evmartinelli/profitei-db:latest
+
+  update-k8s:
+    name: Update K8S Configuration
+    runs-on: ubuntu-latest
+    needs: docker
+    steps:
+      - uses: actions/checkout@v4
+      - uses: imranismail/setup-kustomize@v2
+      - name: update k8s
+        run: |
+          cd k8s
+          kustomize edit set image evmartinelli/profitei:latest=evmartinelli/profitei:${{ github.sha }}
+          cat kustomization.yaml
+      - name: commit
+        run: |          
+          git config --global user.email "gh@action.com"
+          git config --global user.name "GH Actions"
+          git commit -am "Set 'profitei' image tag to '${{ github.sha }}'"
+          git push
+
   execute-database:
-    needs: [check-changed, docker-database]
+    name: Run Database Migration
+    needs: [quality, check-changed, docker-database]
     runs-on: ubuntu-latest
     if: needs.check-changed.outputs.changed-files-database == 'true'
     steps:
