@@ -1,7 +1,7 @@
-FROM node:current-alpine AS build
+FROM node:current AS build
 
 # Instala pacotes em ordem alfabética
-RUN apk add --no-cache g++ make musl-locales python3
+RUN apk add --no-cache g++ make python3
 
 WORKDIR /usr/src/app
 
@@ -19,10 +19,10 @@ ENV NODE_ENV production
 # PRODUCTION
 ###################
 
-FROM node:current-alpine AS production
+FROM node:current AS production
 
 # Instala pacotes em ordem alfabética e combina as instruções RUN
-RUN apk add --no-cache musl-locales
+RUN apk add --no-cache
 
 WORKDIR /usr/src/app
 
@@ -31,9 +31,6 @@ COPY --from=build /usr/src/app/dist ./dist
 COPY --from=build /usr/src/app/node_modules ./node_modules
 COPY --from=build /usr/src/app/data ./data
 
-# Define o locale para UTF-8
-ENV LANG=en_US.UTF-8
-ENV LC_ALL=en_US.UTF-8
 
 EXPOSE 3000
 CMD ["npm", "run", "start:prod"]
