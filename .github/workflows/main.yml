@@ -8,9 +8,6 @@ on:
       - dev
   workflow_dispatch:
 
-permissions:
-  checks: write
-
 jobs:
   quality:
     name: 'Quality'
