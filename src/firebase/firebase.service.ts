@@ -5,6 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import * as admin from 'firebase-admin';
+import { Message } from 'firebase-admin/lib/messaging/messaging-api';
 
 @Injectable()
 export class FirebaseService {
@@ -51,6 +52,23 @@ export class FirebaseService {
     } catch (error) {
       this.logger.error(error);
       throw new NotFoundException('Failed to retrieve user');
+    }
+  }
+
+  async sendNotification(uid: string, title: string, message:string) {
+    try {
+      const messagePayload: Message = {
+        notification: {
+          title,
+          body: message,
+        },
+        token: uid,
+      };
+      
+      await this.adminApp.messaging().send(messagePayload);
+    } catch (error) {
+      this.logger.error(error);
+      throw new Error('Failed to send notification');
     }
   }
 }

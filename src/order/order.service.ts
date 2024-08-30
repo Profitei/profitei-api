@@ -67,6 +67,7 @@ export class OrderService {
           tx,
           createOrderDto,
           paymentResult,
+          user.id,
         );
         return this.getOrderWithDetails(tx, createdOrder.id);
       },
@@ -79,11 +80,13 @@ export class OrderService {
     tx: PrismaTransaction,
     createOrderDto: CreateOrderDto,
     paymentResult: any,
+    userId: number | null,
   ) {
     const createdOrder = await tx.order.create({
       data: {
         items: { connect: createOrderDto.ticketsId.map((id) => ({ id })) },
         details: paymentResult,
+        userId: userId,
       },
     });
     this.logger.log(`Order ${createdOrder.id} created`);
@@ -190,17 +193,10 @@ export class OrderService {
 
     const response = await this.prisma.order.findMany({
       where: {
-        items: {
-          some: {
-            userId: user.id,
-          },
-        },
+        userId: user.id,
       },
       include: {
         items: {
-          where: {
-            userId: user.id,
-          },
           include: {
             Raffle: true,
           },
@@ -224,11 +220,7 @@ export class OrderService {
     const response = await this.prisma.order.findUnique({
       where: {
         id: id,
-        items: {
-          every: {
-            userId: user.id,
-          },
-        },
+        userId: user.id,
       },
       include: {
         items: {

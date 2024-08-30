@@ -24,3 +24,7 @@ install: ## Installs dependencies
 test: ## Runs test suite
 	@echo "Running tests"
 	@npm run test
+
+compose: ## Starts docker-compose
+	@echo "Starting Docker containers"
+	@docker-compose up -d postgres rabbitmq

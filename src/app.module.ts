@@ -15,6 +15,7 @@ import { FirebaseModule } from './firebase/firebase.module';
 import { HealthModule } from './health/health.module';
 import { WebhookModule } from './webhook/webhook.module';
 import { PaymentModule } from './payment/payment.module';
+import { NotifcationsModule } from './notifcations/notifcations.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { PaymentModule } from './payment/payment.module';
     ScheduleModule.forRoot(),
     WebhookModule,
     PaymentModule,
+    NotifcationsModule,
   ],
   providers: [FirebaseAuthGuard, SecurityGuard],
 })
