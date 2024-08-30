@@ -13,16 +13,13 @@ COPY . .
 
 RUN npm run prisma:generate && npm run build
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 ###################
 # PRODUCTION
 ###################
 
 FROM node:current AS production
-
-# Instala pacotes em ordem alfabética e combina as instruções RUN
-RUN apk add --no-cache
 
 WORKDIR /usr/src/app
 
