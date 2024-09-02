@@ -22,7 +22,7 @@ describe('MercadoPagoService', () => {
   });
 
   describe('createPayment', () => {
-    it('should create a payment successfully', async () => {
+    it('should create a payment successfully', async () => {    
       const req = {
         transaction_amount: 100,
         description: 'Test Payment',
@@ -49,6 +49,7 @@ describe('MercadoPagoService', () => {
           transaction_amount: req.transaction_amount,
           description: req.description,
           payment_method_id: req.payment_method_id,
+          date_of_expiration: expect.any(String),
           payer: {
             email: req.email,
             identification: {

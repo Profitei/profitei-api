@@ -6,11 +6,13 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { User } from '../user/entities/user.entity';
 import { OrderStatus } from '@prisma/client';
+import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 
 describe('OrderService', () => {
   let service: OrderService;
   let prismaService: PrismaService;
   let mercadoPagoService: MercadoPagoService;
+  let amqpConnection: AmqpConnection;
 
   const mockPrismaService = {
     $transaction: jest.fn(),
@@ -35,6 +37,10 @@ describe('OrderService', () => {
     createPayment: jest.fn(),
   };
 
+  const mockAmqpConnection = {
+    publish: jest.fn(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -47,12 +53,17 @@ describe('OrderService', () => {
           provide: MercadoPagoService,
           useValue: mockMercadoPagoService,
         },
+        {
+          provide: AmqpConnection,
+          useValue: mockAmqpConnection,
+        },
       ],
     }).compile();
 
     service = module.get<OrderService>(OrderService);
     prismaService = module.get<PrismaService>(PrismaService);
     mercadoPagoService = module.get<MercadoPagoService>(MercadoPagoService);
+    amqpConnection = module.get<AmqpConnection>(AmqpConnection);
   });
 
   it('should be defined', () => {
@@ -118,6 +129,12 @@ describe('OrderService', () => {
         identificationType: 'E-MAIL',
         number: user.email,
       });
+      expect(prismaService.order.create).toHaveBeenCalled();
+      expect(amqpConnection.publish).toHaveBeenCalledWith(
+        'amq.direct',
+        'order.created',
+        1,
+      );
     });
 
     it('should throw an error if tickets are not available', async () => {
@@ -412,9 +429,9 @@ describe('OrderService', () => {
     });
   });
 
-  describe('cancelPendingOrders', () => {
-    it('should cancel all pending orders', async () => {
-      const pendingOrders = [
+  describe('cancelPendingOrder', () => {
+    it('should cancel a pending order', async () => {
+      const pendingOrder =
         {
           id: 1,
           status: OrderStatus.PENDING,
@@ -424,10 +441,9 @@ describe('OrderService', () => {
             { id: 2, Raffle: { name: 'Raffle 2' } },
           ],
           details: { id: 'payment_id' },
-        },
-      ];
+        };
 
-      mockPrismaService.order.findMany.mockResolvedValue(pendingOrders);
+      mockPrismaService.order.findUnique.mockResolvedValue(pendingOrder);
       mockPrismaService.$transaction.mockImplementation(async (cb) =>
         cb(prismaService),
       );
@@ -436,9 +452,9 @@ describe('OrderService', () => {
         status: OrderStatus.CANCELED,
       });
 
-      await service.cancelPendingOrders();
-      expect(mockPrismaService.order.findMany).toHaveBeenCalledWith({
-        where: { status: 'PENDING' },
+      await service.cancelPendingOrder(pendingOrder.id);
+      expect(mockPrismaService.order.findUnique).toHaveBeenCalledWith({
+        where: { id: 1 },
         include: { items: true },
       });
       expect(mockPrismaService.order.update).toHaveBeenCalledWith({

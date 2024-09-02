@@ -5,6 +5,7 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
+import { addMinutes, format } from 'date-fns';
 import { MercadoPagoConfig, Payment } from 'mercadopago';
 import { PaymentCreateData } from 'mercadopago/dist/clients/payment/create/types';
 
@@ -20,13 +21,17 @@ export class MercadoPagoService {
     this.paymentClient = new Payment(client);
   }
 
-  async createPayment(req: any): Promise<any> {
+  async createPayment(req: any): Promise<any> {    
+    const date_of_expiration = addMinutes(new Date(), 30);
+    const formattedDate = format(date_of_expiration, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX");    
+
     try {
       const paymentData: PaymentCreateData = {
         body: {
           transaction_amount: req.transaction_amount,
           description: req.description,
           payment_method_id: req.payment_method_id,
+          date_of_expiration: formattedDate,
           payer: {
             email: req.email,
             identification: {

@@ -16,6 +16,7 @@ import { HealthModule } from './health/health.module';
 import { WebhookModule } from './webhook/webhook.module';
 import { PaymentModule } from './payment/payment.module';
 import { NotifcationsModule } from './notifcations/notifcations.module';
+import { RabbitMQConfigModule } from './rabbitmq/rabbitmq.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { NotifcationsModule } from './notifcations/notifcations.module';
       envFilePath: ['.env', '.env.local'],
     }),
     ScheduleModule.forRoot(),
+    RabbitMQConfigModule,    
     WebhookModule,
     PaymentModule,
     NotifcationsModule,

@@ -4,7 +4,6 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { PrismaService } from '../prisma/prisma.service';
@@ -21,6 +20,7 @@ import {
   PrismaClient,
 } from '@prisma/client';
 import { DefaultArgs } from '@prisma/client/runtime/library';
+import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 
 type PrismaTransaction = Omit<
   PrismaClient<Prisma.PrismaClientOptions, never, DefaultArgs>,
@@ -34,13 +34,8 @@ export class OrderService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly mercadoPagoService: MercadoPagoService,
+    private readonly amqpConnection: AmqpConnection,
   ) {}
-
-  @Cron(CronExpression.EVERY_WEEKDAY)
-  async handleCron() {
-    this.logger.debug('Running Cron Job - Cancel Pending Orders');
-    await this.cancelPendingOrders();
-  }
 
   async create(createOrderDto: CreateOrderDto, user: User): Promise<Order> {
     this.logger.log('Creating a new order');
@@ -69,6 +64,7 @@ export class OrderService {
           paymentResult,
           user.id,
         );
+        await this.publishOrderCreated(createdOrder.id);
         return this.getOrderWithDetails(tx, createdOrder.id);
       },
     );
@@ -288,23 +284,21 @@ export class OrderService {
     return `This action removes a #${id} order`;
   }
 
-  async cancelPendingOrders(): Promise<void> {
-    this.logger.log('Cancelling pending orders');
-    const pendingOrders = await this.prisma.order.findMany({
-      where: { status: OrderStatus.PENDING },
+  async cancelPendingOrder(id: number): Promise<void> {
+    this.logger.log('Cancelling pending order');
+    const pendingOrder = await this.prisma.order.findUnique({
+      where: { id: id },
       include: { items: true },
     });
 
-    this.logger.log(`Found ${pendingOrders.length} pending orders`);
-    for (const order of pendingOrders) {
+    this.logger.log(`Found ${pendingOrder.id} pending order`);
       await this.cancelOrder({
-        id: order.id,
-        status: order.status,
-        created: order.created,
-        tickets: order.items,
-        paymentData: order.details,
+        id: pendingOrder.id,
+        status: pendingOrder.status,
+        created: pendingOrder.created,
+        tickets: pendingOrder.items,
+        paymentData: pendingOrder.details,
       });
-    }
   }
 
   private async cancelOrder(order: Order): Promise<void> {
@@ -329,5 +323,9 @@ export class OrderService {
       tickets: order.items,
       paymentData: order.details,
     };
+  }
+
+  private async publishOrderCreated(id: number) {
+    this.amqpConnection.publish('amq.direct', 'order.created', id);
   }
 }
