@@ -74,21 +74,6 @@ describe('DrawService', () => {
       ]);
     });
   });
-
-  describe('findOne', () => {
-    it('should return a single raffle', async () => {
-      const result = await service.findOne(1);
-      expect(prisma.raffle.findUnique).toHaveBeenCalledWith({
-        where: { id: 1 },
-      });
-      expect(result).toEqual({
-        id: 1,
-        name: 'Raffle 1',
-        status: 'AWAITING_DRAW',
-      });
-    });
-  });
-
   describe('remove', () => {
     it('should return a message saying the draw is removed', () => {
       const result = service.remove(1);

@@ -22,6 +22,16 @@ export class DrawService {
   findOne(id: number) {
     return this.prisma.raffle.findUnique({
       where: { id },
+      include: {
+        tickets: {
+          where: {
+            status: 'UNAVAILABLE',
+          },
+          include: {
+            user: true,
+          },
+        },
+      },
     });
   }
 
