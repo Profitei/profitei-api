@@ -17,6 +17,7 @@ import { WebhookModule } from './webhook/webhook.module';
 import { PaymentModule } from './payment/payment.module';
 import { NotifcationsModule } from './notifcations/notifcations.module';
 import { RabbitMQConfigModule } from './rabbitmq/rabbitmq.module';
+import { DrawModule } from './draw/draw.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { RabbitMQConfigModule } from './rabbitmq/rabbitmq.module';
     WebhookModule,
     PaymentModule,
     NotifcationsModule,
+    DrawModule,
   ],
   providers: [FirebaseAuthGuard, SecurityGuard],
 })
