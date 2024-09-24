@@ -7,11 +7,10 @@ import {
   MemoryHealthIndicator,
 } from '@nestjs/terminus';
 import { PrismaOrmHealthIndicator } from './prismaorm.health';
-import { Public, NoAuth } from '../decorators/public.decorator';
+import { Public } from '../decorators/public.decorator';
 
 @Controller('health')
 @Public()
-@NoAuth()
 export class HealthController {
   constructor(
     private health: HealthCheckService,
@@ -26,7 +25,7 @@ export class HealthController {
   @HealthCheck()
   async check() {
     return this.health.check([
-      async () => this.http.pingCheck('api', 'http://localhost:3000/api'),
+      async () => this.http.pingCheck('api', 'http://localhost:3000/ping'),
       async () =>
         this.disk.checkStorage('diskStorage', {
           thresholdPercent: 0.9,

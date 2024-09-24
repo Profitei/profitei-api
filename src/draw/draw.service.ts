@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateDrawDto } from './dto/create-draw.dto';
 import { PrismaService } from '../prisma/prisma.service';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class DrawService {
@@ -19,13 +20,33 @@ export class DrawService {
     });
   }
 
+  async findAllByUser(user: User) {
+    const raffles = await this.prisma.raffle.findMany({
+      where: { status: { in: ['AWAITING_DRAW', 'DRAWN'] } },
+      include: {
+        tickets: {
+          where: {
+            userId: user.id,
+          },
+        },
+      },
+    });
+
+    const response = {
+      awaitingDraw: raffles.filter((raffle) => raffle.status === 'AWAITING_DRAW'),
+      drawn: raffles.filter((raffle) => raffle.status === 'DRAWN'),
+    };
+
+    return response;    
+  }
+
   findOne(id: number) {
     return this.prisma.raffle.findUnique({
       where: { id },
       include: {
         tickets: {
           where: {
-            status: 'UNAVAILABLE',
+            status: 'AWAITING_DRAW',
           },
           include: {
             user: true,

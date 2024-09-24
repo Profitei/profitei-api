@@ -10,7 +10,6 @@ import { TicketModule } from './ticket/ticket.module';
 import { PropertiesModule } from './properties/properties.module';
 import { OrderModule } from './order/order.module';
 import { FirebaseAuthGuard } from './guards/security/firebase-auth.guard';
-import { SecurityGuard } from './guards/security/security.guard';
 import { FirebaseModule } from './firebase/firebase.module';
 import { HealthModule } from './health/health.module';
 import { WebhookModule } from './webhook/webhook.module';
@@ -18,6 +17,7 @@ import { PaymentModule } from './payment/payment.module';
 import { NotifcationsModule } from './notifcations/notifcations.module';
 import { RabbitMQConfigModule } from './rabbitmq/rabbitmq.module';
 import { DrawModule } from './draw/draw.module';
+import { PingController } from './ping/ping.controller';
 
 @Module({
   imports: [
@@ -41,6 +41,7 @@ import { DrawModule } from './draw/draw.module';
     NotifcationsModule,
     DrawModule,
   ],
-  providers: [FirebaseAuthGuard, SecurityGuard],
+  providers: [FirebaseAuthGuard],
+  controllers: [PingController],
 })
 export class AppModule {}

@@ -1,11 +1,10 @@
 import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { PaymentService } from '../payment/payment.service';
-import { NoAuth, Public } from '..//decorators/public.decorator';
+import { Public } from '../decorators/public.decorator';
 import { MercadoPagoGuard } from '../guards/security/mercado-pago.guard';
 
 @Controller('webhook')
 @Public()
-@NoAuth()
 @UseGuards(MercadoPagoGuard)
 export class WebhookController {
   constructor(private readonly paymentService: PaymentService) {}

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Request } from '@nestjs/common';
 import { DrawService } from './draw.service';
 import { CreateDrawDto } from './dto/create-draw.dto';
 
@@ -14,6 +14,12 @@ export class DrawController {
   @Get()
   findAll() {
     return this.drawService.findAll();
+  }
+
+  @Get('all-by-user')
+  async findAllByUser(@Request() req) {
+    const user = req.user;
+    return await this.drawService.findAllByUser(user);
   }
 
   @Get(':id')
