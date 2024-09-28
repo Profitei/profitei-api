@@ -79,6 +79,7 @@ model User {
   Order    Order[]
   DeviceToken DeviceToken[]
   Notification Notification[]
+  role UserRole  @default(USER)
   created  DateTime  @default(now()) @map("created_at")
   modified DateTime? @updatedAt @map("updated_at")
 }
@@ -114,4 +115,9 @@ enum OrderStatus {
   PENDING
   PAID
   CANCELED
+}
+
+enum UserRole {
+  ADMIN
+  USER
 }
