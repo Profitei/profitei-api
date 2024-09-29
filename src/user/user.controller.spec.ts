@@ -4,6 +4,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { mockCreateUser, mockUsers, mockVolatileValues } from './user.mock';
 import { PrismaService } from '../prisma/prisma.service';
+import { UserRole } from '@prisma/client';
 
 describe('UserController', () => {
   let controller: UserController;
@@ -73,6 +74,7 @@ describe('UserController', () => {
         cpf: '2121212',
         email: 'value',
         image: 'image.png',
+        role: UserRole.USER,
         created: new Date(),
         tradelink:
           'https://steamcommunity.com/tradeoffer/new/?partner=123456789&',

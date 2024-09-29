@@ -4,6 +4,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { mockCreateUser, mockVolatileValues } from './user.mock';
+import { UserRole } from '@prisma/client';
 
 describe('UserService', () => {
   let service: UserService;
@@ -60,6 +61,7 @@ describe('UserService', () => {
           email: 'john.doe@example.com',
           cpf: '123456789',
           image: 'pic.png',
+          role: UserRole.USER,
           created: new Date(),
           modified: new Date(),
           tradelink:
@@ -71,6 +73,7 @@ describe('UserService', () => {
           email: 'jane.smith@example.com',
           cpf: '1234567891',
           image: 'pic.png',
+          role: UserRole.USER,
           created: new Date(),
           modified: new Date(),
           tradelink:
@@ -96,6 +99,7 @@ describe('UserService', () => {
         email: 'john.doe@example.com',
         cpf: '123456789',
         image: 'pic.png',
+        role: UserRole.USER,
         created: new Date(),
         modified: new Date(),
         tradelink:
@@ -152,6 +156,7 @@ describe('UserService', () => {
         email: 'john.doe@example.com',
         cpf: '123456789',
         image: 'pic.png',
+        role: UserRole.USER,
         created: new Date(),
         modified: new Date(),
         tradelink:

@@ -1,3 +1,5 @@
+import { UserRole } from "@prisma/client";
+
 export function mockVolatileValues() {
   return {
     id: 1,
@@ -11,7 +13,8 @@ export function mockCreateUser() {
     email: 'john.doe@example.com',
     cpf: '123456789',
     image: 'pic.png',
-    created: new Date(),
+    role: UserRole.USER,
+    created: new Date(),    
     tradelink:
       'https://steamcommunity.com/tradeoffer/new/?partner=123456789&token=123456789',
   };
@@ -25,6 +28,7 @@ export function mockUsers() {
       email: 'john.doe@example.com',
       cpf: '123456789',
       image: 'pic.png',
+      role: UserRole.USER,
       created: new Date(),
       modified: new Date(),
       tradelink: '',
@@ -35,6 +39,7 @@ export function mockUsers() {
       email: 'jane.smith@example.com',
       cpf: '1234567891',
       image: 'pic.png',
+      role: UserRole.USER,
       created: new Date(),
       modified: new Date(),
       tradelink:
