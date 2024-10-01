@@ -15,51 +15,59 @@ spec:
     spec:
       automountServiceAccountToken: false
       containers:
-      - name: profitei-api
-        image: evmartinelli/profitei
-        imagePullPolicy: IfNotPresent        
-        ports:
-        - containerPort: 3000
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "100m"
-          limits:
-            memory: "256Mi" 
-            cpu: "200m"
-            ephemeral-storage: "1Gi"
-        livenessProbe:
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 10
-          successThreshold: 1
-          failureThreshold: 2
-          httpGet:
-            port: 3000
-            path: /health
-        readinessProbe:
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 10
-          successThreshold: 1
-          failureThreshold: 2
-          httpGet:
-            port: 3000
-            path: /health
-        envFrom:
-        - secretRef:
-            name: profitei-secrets-cchk2gcd4b
-        env:
-          - name: FIREBASE_ADMIN_SDK
-            value: "/var/secrets/google/profitei-firebase-adminsdk-ikxkn-c7414886c1.json"
-        volumeMounts:
-          - name: google-cloud-key
-            mountPath: "/var/secrets/google"
-            readOnly: true
+        - name: profitei-api
+          image: evmartinelli/profitei
+          imagePullPolicy: IfNotPresent        
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi" 
+              cpu: "200m"
+              ephemeral-storage: "1Gi"
+          livenessProbe:
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 10
+            successThreshold: 1
+            failureThreshold: 2
+            httpGet:
+              port: 3000
+              path: /health
+          readinessProbe:
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 10
+            successThreshold: 1
+            failureThreshold: 2
+            httpGet:
+              port: 3000
+              path: /health
+          envFrom:
+            - secretRef:
+                name: profitei-secrets-cchk2gcd4b
+            - secretRef:
+                name: oci-env-vars-bmkhfm98ft
+          env:
+            - name: FIREBASE_ADMIN_SDK
+              value: "/var/secrets/google/profitei-firebase-adminsdk-ikxkn-c7414886c1.json"
+          volumeMounts:
+            - name: google-cloud-key
+              mountPath: "/var/secrets/google"
+              readOnly: true
+            - name: oci-credentials-volume
+              mountPath: /etc/oci
+              readOnly: true
       volumes:
         - name: google-cloud-key
           secret:
             secretName: profitei-secrets-cchk2gcd4b
             items:
               - key: FIREBASE_ADMIN_SDK
-                path: profitei-firebase-adminsdk-ikxkn-c7414886c1.json
+                path: profitei-firebase-adminsdk-ikxkn-c7414886c1.jsoncalc
+        - name: oci-credentials-volume
+          secret:
+            secretName: oci-env-files-962mfc8d7c
