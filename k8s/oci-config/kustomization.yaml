@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+
+kind: Kustomization
+
+namespace: profitei
+
+secretGenerator:
+- name: oci-env-vars
+  envs:
+  - .env.oci
+- name: oci-env-files
+  files:
+  - config
+  - oci_api_key.pem
