@@ -18,8 +18,8 @@ import { NotifcationsModule } from './notifcations/notifcations.module';
 import { RabbitMQConfigModule } from './rabbitmq/rabbitmq.module';
 import { DrawModule } from './draw/draw.module';
 import { PingController } from './ping/ping.controller';
-// import { UploadModule } from './upload/upload.module';
-// import { OciObjectStorageModule } from './oci/oci-object-storage.module';
+import { UploadModule } from './upload/upload.module';
+import { OciObjectStorageModule } from './oci/oci-object-storage.module';
 
 @Module({
   imports: [
@@ -42,8 +42,8 @@ import { PingController } from './ping/ping.controller';
     PaymentModule,
     NotifcationsModule,
     DrawModule,
-    // UploadModule,
-    // OciObjectStorageModule,
+    UploadModule,
+    OciObjectStorageModule,
   ],
   providers: [FirebaseAuthGuard],
   controllers: [PingController],

@@ -70,4 +70,4 @@ spec:
                 path: profitei-firebase-adminsdk-ikxkn-c7414886c1.json
         - name: oci-credentials-volume
           secret:
-            secretName: oci-env-files-962mfc8d7c
+            secretName: oci-env-files-4t5fk948d9
