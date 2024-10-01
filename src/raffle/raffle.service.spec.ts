@@ -61,6 +61,9 @@ describe('RaffleService', () => {
       expect(await service.create(dto)).toEqual(expectedResponse);
       expect(prismaService.raffle.create).toHaveBeenCalledWith({
         data: mockCalledWith(),
+        include: {
+          properties: true,
+        },
       });
     });
   });

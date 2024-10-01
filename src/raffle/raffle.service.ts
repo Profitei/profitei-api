@@ -19,6 +19,9 @@ export class RaffleService {
     const raffleCreateInput = this.mapDtoToPrismaInput(createRaffleDto);
     return this.prisma.raffle.create({
       data: raffleCreateInput,
+      include: {
+        properties: true
+      }
     });
   }
 

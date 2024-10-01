@@ -9,7 +9,7 @@ import { Message } from 'firebase-admin/lib/messaging/messaging-api';
 
 @Injectable()
 export class FirebaseService {
-  private adminApp: admin.app.App;
+  private readonly adminApp: admin.app.App;
   private readonly logger = new Logger(FirebaseService.name);
 
   constructor() {
