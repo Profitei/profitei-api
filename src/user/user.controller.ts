@@ -58,6 +58,7 @@ export class UserController {
     return this.userService.findOne(+id);
   }
 
+  @Public()
   @Get('/email/:email')
   findByEmail(@Param('email') email: string) {
     return this.userService.findByEmail(email);
