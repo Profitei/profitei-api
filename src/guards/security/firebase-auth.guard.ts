@@ -16,8 +16,8 @@ import { UserService } from '../../user/user.service';
 export class FirebaseAuthGuard implements CanActivate {
   private readonly logger = new Logger(FirebaseAuthGuard.name);
   constructor(
-    private firebaseService: FirebaseService,
-    private userService: UserService,
+    private readonly firebaseService: FirebaseService,
+    private readonly userService: UserService,
     private readonly reflector: Reflector,
   ) {}
 
