@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { FirebaseAuthGuard } from './firebase-auth.guard';
+import { ProtectedRoutesGuard } from './protected-routes-guard';
 import { FirebaseService } from '../../firebase/firebase.service';
 import { UserService } from '../../user/user.service';
 import { Reflector } from '@nestjs/core';
@@ -10,7 +10,7 @@ jest.mock('@golevelup/nestjs-rabbitmq', () => ({
 }));
 
 describe('FirebaseAuthGuard', () => {
-  let guard: FirebaseAuthGuard;
+  let guard: ProtectedRoutesGuard;
 
   const mockFirebaseService = {
     verifyIdToken: jest.fn(),
@@ -34,14 +34,14 @@ describe('FirebaseAuthGuard', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        FirebaseAuthGuard,
+        ProtectedRoutesGuard,
         { provide: FirebaseService, useValue: mockFirebaseService },
         { provide: UserService, useValue: mockUserService },
         { provide: Reflector, useValue: mockReflector },
       ],
     }).compile();
 
-    guard = module.get<FirebaseAuthGuard>(FirebaseAuthGuard);
+    guard = module.get<ProtectedRoutesGuard>(ProtectedRoutesGuard);
   });
 
   it('should be defined', () => {

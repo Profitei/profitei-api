@@ -9,14 +9,13 @@ import {
 import { isRabbitContext } from '@golevelup/nestjs-rabbitmq';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from '../../decorators/public.decorator';
-import { FirebaseService } from '../../firebase/firebase.service';
 import { UserService } from '../../user/user.service';
 
 @Injectable()
-export class FirebaseAuthGuard implements CanActivate {
-  private readonly logger = new Logger(FirebaseAuthGuard.name);
+export class ProtectedRoutesGuard implements CanActivate {
+  private readonly logger = new Logger(ProtectedRoutesGuard.name);
+
   constructor(
-    private readonly firebaseService: FirebaseService,
     private readonly userService: UserService,
     private readonly reflector: Reflector,
   ) {}
@@ -36,23 +35,28 @@ export class FirebaseAuthGuard implements CanActivate {
     }
 
     const request = context.switchToHttp().getRequest();
-    const token = request.headers.authorization?.split(' ')[1];
 
-    if (!token || typeof token !== 'string') {
-      throw new ForbiddenException('Invalid token');
+    // Recuperando os cabeçalhos
+    const consumerId = request.headers['x-consumer-id'];
+    const consumerUsername = request.headers['x-consumer-username'];
+    const email = request.headers['x-consumer-custom-id'];
+
+    // Logando os valores
+    this.logger.log(`X-Consumer-ID: ${consumerId}`);
+    this.logger.log(`X-Consumer-Username: ${consumerUsername}`);
+
+    if (!email || typeof email !== 'string') {
+      throw new ForbiddenException('Invalid X-Consumer-Custom-ID header');
     }
 
     try {
-      this.logger.log('Validating Firebase token');
-      const decodedToken = await this.firebaseService.verifyIdToken(token);
-      const userDetails = await this.userService.findByEmail(
-        decodedToken.email,
-      );
+      this.logger.log('Setting User Request Property');
+      const userDetails = await this.userService.findByEmail(email);
       request.user = userDetails;
       return true;
     } catch (error) {
-      this.logger.error('Failed to authenticate Firebase token', error.stack);
-      throw new UnauthorizedException('Failed to authenticate Firebase token');
+      this.logger.error('Failed to retrieve user details', error.stack);
+      throw new UnauthorizedException('Failed to retrieve user details');
     }
   }
 }

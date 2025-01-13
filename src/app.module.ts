@@ -9,7 +9,7 @@ import { CategoryModule } from './category/category.module';
 import { TicketModule } from './ticket/ticket.module';
 import { PropertiesModule } from './properties/properties.module';
 import { OrderModule } from './order/order.module';
-import { FirebaseAuthGuard } from './guards/security/firebase-auth.guard';
+import { ProtectedRoutesGuard } from './guards/security/protected-routes-guard';
 import { FirebaseModule } from './firebase/firebase.module';
 import { HealthModule } from './health/health.module';
 import { WebhookModule } from './webhook/webhook.module';
@@ -45,7 +45,7 @@ import { OciObjectStorageModule } from './oci/oci-object-storage.module';
     UploadModule,
     OciObjectStorageModule,
   ],
-  providers: [FirebaseAuthGuard],
+  providers: [ProtectedRoutesGuard],
   controllers: [PingController],
 })
 export class AppModule {}

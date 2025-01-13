@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { FirebaseAuthGuard } from './guards/security/firebase-auth.guard';
+import { ProtectedRoutesGuard } from './guards/security/protected-routes-guard';
 import { LogLevel, ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 
@@ -30,10 +30,10 @@ async function bootstrap() {
 
   SwaggerModule.setup('api', app, document);
 
-  const firebaseAuthGuard = app.get(FirebaseAuthGuard);
+  const protectedRoutesGuard = app.get(ProtectedRoutesGuard);
 
 
-  app.useGlobalGuards(firebaseAuthGuard);
+  app.useGlobalGuards(protectedRoutesGuard);
 
   app.useGlobalFilters(new HttpExceptionFilter());
 
