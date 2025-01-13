@@ -9,6 +9,10 @@ jest.mock('@golevelup/nestjs-rabbitmq', () => ({
   isRabbitContext: jest.fn().mockReturnValue(false),
 }));
 
+jest.mock('jsonwebtoken', () => ({
+  decode: jest.fn(),
+}));
+
 describe('FirebaseAuthGuard', () => {
   let guard: ProtectedRoutesGuard;
 
@@ -74,36 +78,6 @@ describe('FirebaseAuthGuard', () => {
     await expect(
       guard.canActivate(mockExecutionContext as unknown as ExecutionContext),
     ).rejects.toThrow(ForbiddenException);
-  });
-
-  it('should validate user from x-consumer-custom-id and set user on request', async () => {
-    const consumerId = 'consumer-id-123';
-    const consumerUsername = 'consumer-username';
-    const customId = 'test@example.com'; // Este será usado como email
-    const userDetails = { id: 1, email: 'test@example.com' };
-  
-    mockReflector.getAllAndOverride.mockReturnValue(false);
-    mockExecutionContext.getRequest.mockReturnValue({
-      headers: {
-        'x-consumer-id': consumerId,
-        'x-consumer-username': consumerUsername,
-        'x-consumer-custom-id': customId,
-      },
-    });
-    
-    mockUserService.findByEmail.mockResolvedValue(userDetails);
-  
-    const result = await guard.canActivate(
-      mockExecutionContext as unknown as ExecutionContext,
-    );
-    const request = mockExecutionContext.getRequest();
-  
-    expect(result).toBe(true);
-    expect(request.user).toBe(userDetails);
-    expect(mockUserService.findByEmail).toHaveBeenCalledWith(customId);
-  
-    // Adiciona verificações para os logs, se necessário
-    expect(mockExecutionContext.getRequest).toHaveBeenCalled();
   });
 
   it('should throw error if Firebase token verification fails', async () => {

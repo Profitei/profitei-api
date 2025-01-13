@@ -10,6 +10,7 @@ import { isRabbitContext } from '@golevelup/nestjs-rabbitmq';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from '../../decorators/public.decorator';
 import { UserService } from '../../user/user.service';
+import { decode } from 'jsonwebtoken';
 
 @Injectable()
 export class ProtectedRoutesGuard implements CanActivate {
@@ -36,25 +37,17 @@ export class ProtectedRoutesGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest();
 
-    // Recuperando os cabeçalhos
-    const consumerId = request.headers['x-consumer-id'];
-    const consumerUsername = request.headers['x-consumer-username'];
-    const email = request.headers['x-consumer-custom-id'];
+    const token = request.headers.authorization?.split(' ')[1];
 
-    // Log all headers
-    this.logger.log(`Headers: ${JSON.stringify(request.headers)}`);
-
-    // Logando os valores
-    this.logger.log(`X-Consumer-ID: ${consumerId}`);
-    this.logger.log(`X-Consumer-Username: ${consumerUsername}`);
-
-    if (!email || typeof email !== 'string') {
-      throw new ForbiddenException('Invalid X-Consumer-Custom-ID header');
+    if (!token || typeof token !== 'string') {
+      throw new ForbiddenException('Invalid token');
     }
+
+    const decodedToken = decode(token);
 
     try {
       this.logger.log('Setting User Request Property');
-      const userDetails = await this.userService.findByEmail(email);
+      const userDetails = await this.userService.findByEmail(decodedToken['email']);
       request.user = userDetails;
       return true;
     } catch (error) {
