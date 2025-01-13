@@ -42,7 +42,7 @@ export class ProtectedRoutesGuard implements CanActivate {
     const email = request.headers['x-consumer-custom-id'];
 
     // Log all headers
-    this.logger.log(`Headers: ${JSON.stringify(request.headers, null, 2)}`);
+    this.logger.log(`Headers: ${JSON.stringify(request.headers)}`);
 
     // Logando os valores
     this.logger.log(`X-Consumer-ID: ${consumerId}`);
