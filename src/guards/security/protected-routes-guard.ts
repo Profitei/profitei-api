@@ -41,6 +41,9 @@ export class ProtectedRoutesGuard implements CanActivate {
     const consumerUsername = request.headers['x-consumer-username'];
     const email = request.headers['x-consumer-custom-id'];
 
+    // Log all headers
+    this.logger.log(`Headers: ${JSON.stringify(request.headers, null, 2)}`);
+
     // Logando os valores
     this.logger.log(`X-Consumer-ID: ${consumerId}`);
     this.logger.log(`X-Consumer-Username: ${consumerUsername}`);
