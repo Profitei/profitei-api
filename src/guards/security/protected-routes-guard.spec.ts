@@ -76,29 +76,34 @@ describe('FirebaseAuthGuard', () => {
     ).rejects.toThrow(ForbiddenException);
   });
 
-  it('should validate Firebase token and set user on request', async () => {
-    const token = 'validToken';
-    const decodedToken = { email: 'test@example.com' };
+  it('should validate user from x-consumer-custom-id and set user on request', async () => {
+    const consumerId = 'consumer-id-123';
+    const consumerUsername = 'consumer-username';
+    const customId = 'test@example.com'; // Este será usado como email
     const userDetails = { id: 1, email: 'test@example.com' };
-
+  
     mockReflector.getAllAndOverride.mockReturnValue(false);
     mockExecutionContext.getRequest.mockReturnValue({
-      headers: { authorization: `Bearer ${token}` },
+      headers: {
+        'x-consumer-id': consumerId,
+        'x-consumer-username': consumerUsername,
+        'x-consumer-custom-id': customId,
+      },
     });
-    mockFirebaseService.verifyIdToken.mockResolvedValue(decodedToken);
+    
     mockUserService.findByEmail.mockResolvedValue(userDetails);
-
+  
     const result = await guard.canActivate(
       mockExecutionContext as unknown as ExecutionContext,
     );
     const request = mockExecutionContext.getRequest();
-
+  
     expect(result).toBe(true);
     expect(request.user).toBe(userDetails);
-    expect(mockFirebaseService.verifyIdToken).toHaveBeenCalledWith(token);
-    expect(mockUserService.findByEmail).toHaveBeenCalledWith(
-      decodedToken.email,
-    );
+    expect(mockUserService.findByEmail).toHaveBeenCalledWith(customId);
+  
+    // Adiciona verificações para os logs, se necessário
+    expect(mockExecutionContext.getRequest).toHaveBeenCalled();
   });
 
   it('should throw error if Firebase token verification fails', async () => {
