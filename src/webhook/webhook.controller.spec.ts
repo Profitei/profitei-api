@@ -2,14 +2,20 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { WebhookController } from './webhook.controller';
 import { PaymentService } from '../payment/payment.service';
 import { MercadoPagoGuard } from '../guards/security/mercado-pago.guard';
+import { UserService } from '../user/user.service';
 
 describe('WebhookController', () => {
   let controller: WebhookController;
   let paymentService: PaymentService;
+  let userService: UserService;
 
   beforeEach(async () => {
     const mockPaymentService = {
       publishPaymentReceived: jest.fn(),
+    };
+
+    const mockUserService = {
+      create: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -18,6 +24,10 @@ describe('WebhookController', () => {
         {
           provide: PaymentService,
           useValue: mockPaymentService,
+        },
+        {
+          provide: UserService,
+          useValue: mockUserService,
         },
       ],
     })
@@ -29,6 +39,7 @@ describe('WebhookController', () => {
 
     controller = module.get<WebhookController>(WebhookController);
     paymentService = module.get<PaymentService>(PaymentService);
+    userService = module.get<UserService>(UserService);
   });
 
   it('should be defined', () => {
@@ -57,6 +68,29 @@ describe('WebhookController', () => {
       await controller.handlePaymentNotification(paymentInfo);
       expect(paymentService.publishPaymentReceived).toHaveBeenCalledWith(
         paymentInfo,
+      );
+    });
+
+    it('should call userService.create with correct user data', async () => {
+      const userInfo = {
+        data: {
+          first_name: 'John',
+          last_name: 'Doe',
+          email_addresses: [
+            {
+              email_address: 'john.doe@example.com',
+            },
+          ],
+        },
+      };
+
+      await controller.handleUserNotification(userInfo);
+
+      expect(userService.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: 'John Doe',
+          email: 'john.doe@example.com',
+        }),
       );
     });
   });

@@ -38,7 +38,7 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   @IsOptional()
-  tradelink: string;
+  tradelink?: string;
 
   @IsDate()
   @IsNotEmpty()
